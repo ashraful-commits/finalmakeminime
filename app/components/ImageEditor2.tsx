@@ -129,7 +129,7 @@ const ImageEditor = ({
     };
   }, [defaultFaceImage, imagePosition, scale, rotation]);
 
-  // Event handlers
+  
   const handleMouseDown = (e) => {
     const rect = canvasRef.current.getBoundingClientRect();
     setDragStart({ x: e.clientX - rect.left, y: e.clientY - rect.top });
@@ -141,7 +141,6 @@ const ImageEditor = ({
     const rect = canvasRef.current.getBoundingClientRect();
     const dx = e.clientX - rect.left - dragStart.x;
     const dy = e.clientY - rect.top - dragStart.y;
-
     setImagePosition((prevPos) => ({
       x: prevPos.x + dx,
       y: prevPos.y + dy,
@@ -149,31 +148,41 @@ const ImageEditor = ({
     setDragStart({ x: e.clientX - rect.left, y: e.clientY - rect.top });
   };
 
-  const handleMouseUp = () => setIsDragging(false);
+  const handleMouseUp = () => {
+    setIsDragging(false);
+  };
 
   const handleWheel = (e) => {
-    setScale((prev) =>
-      e.deltaY > 0 ? Math.max(prev - 0.01, 0.01) : prev + 0.01
-    );
+    if (e.deltaY > 0) {
+      setScale((prevScale) => Math.max(prevScale - 0.01, 0.01)); 
+    } else {
+      setScale((prevScale) => prevScale + 0.01); 
+    }
   };
 
   const handleRotate = (direction) => {
-    setRotation((prev) => prev + direction * 5);
+    setRotation((prevRotation) => prevRotation + direction * 5); 
   };
 
   const handleMove = (direction) => {
-    const moveMap = {
-      up: { y: -5 },
-      down: { y: 5 },
-      left: { x: -5 },
-      right: { x: 5 },
-    };
-
-    setImagePosition((prev) => ({
-      ...prev,
-      ...moveMap[direction],
-    }));
+    switch (direction) {
+      case "up":
+        setImagePosition((prevPos) => ({ ...prevPos, y: prevPos.y - 5 }));
+        break;
+      case "down":
+        setImagePosition((prevPos) => ({ ...prevPos, y: prevPos.y + 5 }));
+        break;
+      case "left":
+        setImagePosition((prevPos) => ({ ...prevPos, x: prevPos.x - 5 }));
+        break;
+      case "right":
+        setImagePosition((prevPos) => ({ ...prevPos, x: prevPos.x + 5 }));
+        break;
+      default:
+        break;
+    }
   };
+  
 
   const handleAddToCart = async (id: string, faceImage: string) => {
     if (!containerRef.current || !faceImage) {
@@ -231,7 +240,8 @@ const ImageEditor = ({
       setLoading(false);
     }
   };
-
+  
+  
   return (
     <div className="flex flex-col border-r border-r-gray-500 items-center justify-center w-[50%] max-sm:w-full max-sm:border-b z-0 lg:min-h-[90vh] max-sm:min-h-[50vh] md:min-h-[80vh]">
       <div className="relative w-full flex justify-center items-center  bg-center bg-no-repeat max-sm:scale-50 md:scale-75 lg:scale-100 lg:min-h-[90vh] max-sm:min-h-[50vh] md:min-h-[80vh] max-sm:h-[35vh]">
@@ -254,7 +264,7 @@ const ImageEditor = ({
               ref={canvasRef}
               width={"400px"}
               height={"500px"}
-              className=" absolute -top-5 hover:cursor-grab hover:border-[6px] rounded-full border-[6px] border-transparent hover:border-yellow-500 hover:border-dotted z-40"
+              className=" absolute top-3 hover:cursor-grab hover:border-[6px] rounded-full border-[6px] border-transparent hover:border-yellow-500 hover:border-dotted z-40"
               onMouseDown={handleMouseDown}
               onMouseMove={handleMouseMove}
               onMouseUp={handleMouseUp}
@@ -297,7 +307,7 @@ const ImageEditor = ({
           <div className="flex gap-4 mt-10 absolute right-10 bottom-10 max-sm:bottom-0">
             <button
               onClick={() => handleAddToCart(productId, faceImage)}
-              className="bg-green-600 text-white px-6 py-3 flex justify-center items-center rounded-md text-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="bg-green-600 max-sm:scale-75 text-white px-6 py-3 flex justify-center items-center rounded-md text-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
             >
               {loading ? (
                 <AiOutlineLoading3Quarters className="animate-spin inline-block mr-2" />
@@ -308,34 +318,52 @@ const ImageEditor = ({
             </button>
           </div>
 
-          <div className="controls mt-1">
-            <div className="flex gap-2">
-              <ControlButton
-                onClick={() => handleRotate(1)}
-                icon={<FaSync />}
-              />
-              <ControlButton
-                onClick={() => handleRotate(-1)}
-                icon={<FaSync className="rotate-180" />}
-              />
-              <ControlButton
-                onClick={() => handleMove("up")}
-                icon={<FaArrowAltCircleUp />}
-              />
-              <ControlButton
-                onClick={() => handleMove("down")}
-                icon={<FaArrowAltCircleDown />}
-              />
-              <ControlButton
-                onClick={() => setScale((p) => p + 0.01)}
-                icon={<FaPlus />}
-              />
-              <ControlButton
-                onClick={() => setScale((p) => Math.max(p - 0.01, 0.01))}
-                icon={<FaMinus />}
-              />
-            </div>
+          {step === 7 && (
+        <div className="controls mt-1">
+          <div className="flex gap-2 justify-center items-center max-sm:gap-0">
+            <button
+              onClick={() => handleRotate(1)}
+              className="bg-blue-600 text-white px-2 py-1 text-sm rounded-md hover:bg-blue-700 flex items-center gap-2 max-sm:flex-col max-sm:scale-75"
+            >
+              <FaSync className="inline-block text-sm font-light" /> <span className="inline-block">Rotate right</span>
+            </button>
+            <button
+              onClick={() => handleRotate(-1)}
+              className="bg-blue-600 text-white px-2 py-1 text-sm rounded-md hover:bg-blue-700 flex items-center gap-2  max-sm:flex-col max-sm:scale-75"
+            >
+              <FaSync className="inline-block transform rotate-180" /> <span className="inline-block">Rotate left</span>
+            </button>
+
+            <button
+              onClick={() => handleMove("up")}
+              className="bg-gray-600 text-white px-2 py-1 text-sm rounded-md hover:bg-gray-700 flex items-center gap-2  max-sm:flex-col max-sm:scale-75"
+            >
+              <FaArrowAltCircleUp className="inline-block text-sm font-light" /> <span className="inline-block">Up</span>
+            </button>
+            <button
+              onClick={() => handleMove("down")}
+              className="bg-gray-600 text-white px-2 py-1 text-sm rounded-md hover:bg-gray-700 flex items-center gap-2  max-sm:flex-col max-sm:scale-75"
+            >
+              <FaArrowAltCircleDown className="inline-block text-sm font-light" /> <span className="inline-block">Down</span>
+            </button>
+
+            <button
+              onClick={() => setScale((prevScale) => prevScale + 0.01)}
+              className="bg-gray-600 text-white px-2 py-1 text-sm rounded-md hover:bg-gray-700 flex items-center gap-2 max-sm:flex-col max-sm:scale-75"
+            >
+              <FaPlus className="inline-block text-sm font-light" /> <span className="inline-block">Zoom in</span>
+            </button>
+            <button
+              onClick={() =>
+                setScale((prevScale) => Math.max(prevScale - 0.01, 0.01))
+              }
+              className="bg-gray-600 text-white px-2 py-1 text-sm rounded-md hover:bg-gray-700 flex items-center gap-2 max-sm:flex-col max-sm:scale-75"
+            >
+              <FaMinus className="inline-block text-sm font-light" /> <span className="inline-block">Zoom out</span>
+            </button>
           </div>
+        </div>
+      )}
         </>
       )}
     </div>
@@ -343,13 +371,6 @@ const ImageEditor = ({
 };
 
 // Reusable control button component
-const ControlButton = ({ onClick, icon, className = "" }) => (
-  <button
-    onClick={onClick}
-    className={`bg-gray-600 text-white px-2 py-1 text-sm rounded-md hover:bg-gray-700 flex items-center gap-2 ${className}`}
-  >
-    {icon}
-  </button>
-);
+
 
 export default ImageEditor;

@@ -74,12 +74,13 @@ function ImagePreview({ croppedImage, setStep, setCropedImage }) {
               alt="Cropped"
             />
           </div>
-          <div className="w-full max-w-md space-y-4">
+          <div className="w-full  max-w-md space-y-4 max-sm:scale-75 mb-10 ">
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label htmlFor="brightness" className="block text-sm font-medium text-gray-700">
                 Brightness
               </label>
               <input
+              id="brightness"
                 type="range"
                 min="0"
                 max="200"
@@ -89,10 +90,11 @@ function ImagePreview({ croppedImage, setStep, setCropedImage }) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label htmlFor="contrast" className="block text-sm font-medium text-gray-700">
                 Contrast
               </label>
               <input
+              id="contrast"
                 type="range"
                 min="0"
                 max="200"
@@ -102,10 +104,11 @@ function ImagePreview({ croppedImage, setStep, setCropedImage }) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label htmlFor="rotation" className="block text-sm font-medium text-gray-700">
                 Rotate (°)
               </label>
               <input
+              id="rotation"
                 type="number"
                 value={rotation}
                 onChange={(e) => setRotation(e.target.value)}
@@ -113,10 +116,11 @@ function ImagePreview({ croppedImage, setStep, setCropedImage }) {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700">
+              <label htmlFor="zoom" className="block text-sm font-medium text-gray-700">
                 Zoom
               </label>
               <input
+              id="zoom"
                 type="range"
                 min="50"
                 max="200"

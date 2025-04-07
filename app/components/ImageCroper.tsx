@@ -2,7 +2,8 @@ import React, { useRef, useEffect } from "react";
 import { Cropper, CropperRef } from "react-advanced-cropper";
 import "react-advanced-cropper/dist/style.css";
 import { 
-  FaRedo, FaCrop
+  FaRedo, FaCrop,
+  FaCheck
 } from "react-icons/fa";
 
 interface ImageCropperProps {
@@ -57,9 +58,31 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
     setUploadedPhoto?.(null);
     setStep?.(0);
   };
-
+  const handleConfirm = () => {
+    const image = new Image();
+    image.crossOrigin = "anonymous"; // In case the image is from a different domain
+    image.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = image.width;
+      canvas.height = image.height;
+  
+      const ctx = canvas.getContext("2d");
+      if (ctx) {
+        ctx.drawImage(image, 0, 0);
+        const dataUrl = canvas.toDataURL("image/png"); // ⬅ PNG format
+  
+        setCropedImage?.(dataUrl);
+        localStorage.setItem("cropedImage", JSON.stringify(dataUrl));
+        onCropChange?.(dataUrl);
+        onCrop?.(dataUrl);
+        setStep?.(5);
+      }
+    };
+    image.src = src;
+  };
+  
   return (
-    <div className="w-[50%] max-sm:w-full justify-center flex flex-col items-center space-y-4 min-h-full max-sm:mb-5">
+    <div className="w- max-sm:w-full justify-center flex flex-col items-center space-y-4 min-h-full max-sm:min-h-[50vh] max-sm:mb-5">
       <Cropper
         ref={cropperRef}
         src={src}
@@ -67,24 +90,31 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
       />
 
       {/* Controls */}
-      <div className="flex space-x-2 border border-blue-200 rounded-md p-5">
+      <div className="flex max-sm:scale- space-x-2 border border-blue-200 rounded-md justify-center items-center p-5 w-full">
+      <button
+          onClick={handleChangePhoto}
+          className="px-2 py-1 max-sm:trancate bg-gray-600 text-gray-100 hover:text-white text-sm rounded hover:bg-gray-800 border border-gray-800 flex justify-center items-center   gap-2"
+        >
+          Change Photo
+        </button>
         <button
           onClick={resetCropper}
-          className="px-2 py-1 bg-red-100 bg-opacity-50 text-red-900 hover:text-white text-sm rounded hover:bg-red-800 border border-red-800 flex justify-center items-center gap-2"
+          className="px-2 py-1  max-sm:gap-1 bg-red-100 bg-opacity-50 text-red-900 hover:text-white text-sm rounded hover:bg-red-800 border border-red-800 flex justify-center items-center gap-2  max-sm:text-sm"
         >
-          <FaRedo />
+          <FaRedo /> <span>Reset</span>
         </button>
         <button
           onClick={handleCrop}
-          className="px-2 py-1 bg-blue-100 bg-opacity-50 text-blue-500 hover:text-white text-sm rounded hover:bg-blue-800 border border-blue-800 flex justify-center items-center gap-2"
+          className="px-2 py-1 bg-blue-100 bg-opacity-50 text-blue-500 hover:text-white text-sm rounded hover:bg-blue-800 border border-blue-800 flex justify-center items-center gap-2 max-sm:gap-1 "
         >
-          <FaCrop className="font-normal" />
+          <FaCrop className="font-xl" /> <span className="trancate block">Crop face</span>
         </button>
+      
         <button
-          onClick={handleChangePhoto}
-          className="px-2 py-1 bg-gray-600 text-gray-100 hover:text-white text-sm rounded hover:bg-gray-800 border border-gray-800 flex justify-center items-center gap-2"
+          onClick={handleConfirm}
+          className="px-2 py-1  text-blue-500 hover:text-white text-sm rounded hover:bg-blue-800 border border-blue-800 flex justify-center items-center gap-2"
         >
-          Change Photo
+         <FaCheck className="font-xl" />  Confirm
         </button>
       </div>
     </div>

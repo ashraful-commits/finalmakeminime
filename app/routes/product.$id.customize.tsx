@@ -466,7 +466,7 @@ export default function ProductIdCustomize() {
               <div className="w-[50%] max-sm:w-full flex flex-col items-center justify-center">
                 <label
                   htmlFor="uploadphoto"
-                  className="mt-10 text-blue-500 font-semibold min-w-[200px] px-10 py-6 bg-blue-200 bg-opacity-50 border border-blue-500  hover:text-white hover:bg-blue-600 rounded-md shadow-sm cursor-pointer flex justify-center items-center"
+                  className="mt-10 text-blue-500 font-semibold min-w-[200px] px-10 py-6 bg-blue-200 bg-opacity-50 border border-blue-500  hover:text-white hover:bg-blue-600 rounded-md shadow-sm cursor-pointer flex justify-center max-sm:scale-75 items-center"
                 >
                   Upload Photo
                 </label>
@@ -479,7 +479,7 @@ export default function ProductIdCustomize() {
                 />
                 <button
                   onClick={handleTakePhoto}
-                  className="mt-3 min-w-[200px] px-10 py-6 bg-green-200 font-semibold hover:bg-green-600 rounded-md shadow-sm  cursor-pointer text-green-500 bg-opacity-50 border border-green-500  flex justify-center items-center hover:text-white"
+                  className="mt-3 min-w-[200px] px-10 py-6 bg-green-200 font-semibold hover:bg-green-600 rounded-md shadow-sm  cursor-pointer text-green-500 bg-opacity-50 border border-green-500  flex justify-center items-center hover:text-white  max-sm:scale-75"
                 >
                   Take Photo
                 </button>
@@ -542,7 +542,7 @@ export default function ProductIdCustomize() {
               </div>
             )}
             {step === 4 && skinTone && (
-              <div className="w-full max-w-md mx-auto flex space-y-3 flex-col items-center justify-center p-6">
+              <div className="w-full max-w-md mx-auto flex space-y-3 max-sm:scale-75 flex-col items-center justify-center p-6">
                 {/* Section Title and Navigation Buttons */}
                 <div className="flex gap-4 mb-5 justify-between items-center w-full">
                   <button

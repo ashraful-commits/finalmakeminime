@@ -137,7 +137,7 @@ const FaceCutterApp = ({ faceImage, setStep, setCropedImage }) => {
   };
 
   return (
-    <div className="w-[50%] max-sm:w-full flex space-y-10 flex-col items-center justify-center border-gray-300 lg:border-r md:border-r max-sm:border-b min-h-[80vh] p-4 bg-white  rounded-lg relative">
+    <div className="w-[50%] max-sm:w-full flex space-y-10 max-sm:space-y-1 flex-col items-center justify-center border-gray-300 lg:border-r md:border-r max-sm:border-b min-h-[80vh] max-sm:min-h-[50vh] p-4 bg-white  rounded-lg relative">
       <h2 className="text-xl font-semibold text-center text-gray-800 mb-6">
         Edit you photo
       </h2>
@@ -152,7 +152,7 @@ const FaceCutterApp = ({ faceImage, setStep, setCropedImage }) => {
         </div>
       )}
 
-      <div className="flex justify-center max-sm:flex-col gap-4 mb-6 mt-20">
+      <div className="flex justify-center  gap-4 mb-6 mt-20">
         
 
     
@@ -167,7 +167,7 @@ const FaceCutterApp = ({ faceImage, setStep, setCropedImage }) => {
             {removeLoader && (
               <AiOutlineLoading3Quarters className="animate-spin" />
             )}
-            {removeLoader ? "Wait less than 1 min" : "Remove Bacground"}
+            {removeLoader ? "Wait less than 1 min" : "Cutout face"}
           </button>
         )}
 
