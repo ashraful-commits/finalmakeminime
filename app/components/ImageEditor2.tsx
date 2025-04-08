@@ -133,7 +133,79 @@ const ImageEditor = ({
       ctx.restore();
     };
   }, [defaultFaceImage, imagePosition, scale, rotation]);
-
+  const [pinchStartDistance, setPinchStartDistance] = useState<number | null>(null);
+  const [initialScale, setInitialScale] = useState<number | null>(null);
+  
+  // Add these touch handlers
+  const handleTouchStart = (e: React.TouchEvent) => {
+    e.preventDefault();
+    const touches = e.touches;
+    
+    if (touches.length === 1) {
+      // Single touch - start dragging
+      const rect = canvasRef.current.getBoundingClientRect();
+      const touch = touches[0];
+      setDragStart({
+        x: touch.clientX - rect.left,
+        y: touch.clientY - rect.top,
+      });
+      setIsDragging(true);
+    } else if (touches.length === 2) {
+      // Two touches - start pinch zoom
+      const touch1 = touches[0];
+      const touch2 = touches[1];
+      const distance = Math.hypot(
+        touch2.clientX - touch1.clientX,
+        touch2.clientY - touch1.clientY
+      );
+      setPinchStartDistance(distance);
+      setInitialScale(scale);
+    }
+  };
+  
+  const handleTouchMove = (e: React.TouchEvent) => {
+    e.preventDefault();
+    const touches = e.touches;
+  
+    if (touches.length === 1 && isDragging) {
+      // Single touch drag
+      const rect = canvasRef.current.getBoundingClientRect();
+      const touch = touches[0];
+      const dx = touch.clientX - rect.left - dragStart.x;
+      const dy = touch.clientY - rect.top - dragStart.y;
+  
+      setImagePosition((prevPos) => ({
+        x: prevPos.x + dx,
+        y: prevPos.y + dy,
+      }));
+  
+      setDragStart({
+        x: touch.clientX - rect.left,
+        y: touch.clientY - rect.top,
+      });
+    } else if (touches.length === 2 && pinchStartDistance && initialScale) {
+      // Pinch zoom
+      const touch1 = touches[0];
+      const touch2 = touches[1];
+      const newDistance = Math.hypot(
+        touch2.clientX - touch1.clientX,
+        touch2.clientY - touch1.clientY
+      );
+      
+      const scaleFactor = newDistance / pinchStartDistance;
+      const newScale = initialScale * scaleFactor;
+      
+      // Add scale limits if needed
+      setScale(Math.max(newScale, 0.01));
+    }
+  };
+  
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    e.preventDefault();
+    setIsDragging(false);
+    setPinchStartDistance(null);
+    setInitialScale(null);
+  };
   
   const handleMouseDown = (e) => {
     const rect = canvasRef.current.getBoundingClientRect();
@@ -262,6 +334,9 @@ const ImageEditor = ({
               onMouseMove={handleMouseMove}
               onMouseUp={handleMouseUp}
               onWheel={handleWheel}
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
             />
           ) : (
             <img
