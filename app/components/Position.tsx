@@ -55,7 +55,7 @@ const Position = ({ setStep, setImagePosition, setRotation, setScale }) => {
   };
   return (
     <div className="controls mt-1  w-[50%] max-w-4xl max-sm:max-w-full ">
-      <h2 className="text-center my-5 text-2xl">Position</h2>
+      <h2 className="text-center max-sm:my-5 my-10 text-lg max-sm:text-sm font-bold w-full">Useing the tools below position the face on the items correctly</h2>
       <div className="grid grid-cols-3 gap-2  justify-center items-center max-sm:gap-4 max-sm:flex max-sm:justify-center">
         <div className="flex flex-col justify-center items-center order-2">
           <span className="text-blue-500">Rotate</span>
