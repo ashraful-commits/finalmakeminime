@@ -3,23 +3,31 @@ import { FaCartPlus } from "react-icons/fa";
 import html2canvas from "html2canvas";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { v4 as uuidv4 } from 'uuid';
-import {
-  FaArrowAltCircleUp,
-  FaArrowAltCircleDown,
-  FaPlus,
-  FaMinus,
-  FaSync,
-} from "react-icons/fa";
 
+interface ImageEditorProps {
+  faceImage: string;
+  bodyImage: string;
+  skinTone: string;
+  headBackImage: string;
+  setStep: React.Dispatch<React.SetStateAction<number>>;
+  step: number;
+  productId: string;
+  skinToneImage: string;
+  rotation: number;
+  imagePosition:{x:number,y:number};
+  setImagePosition:React.Dispatch<React.SetStateAction<{x:number,y:number}>>;
+  setScale:React.Dispatch<React.SetStateAction<number>>;
+  scale: number;
+}
 const ImageEditor = ({
   faceImage,
   bodyImage,
   skinTone,
   headBackImage,
-  setStep,
   step,
-  productId,skinToneImage
-}) => {
+  productId,skinToneImage,rotation,imagePosition,setScale,scale,
+  setImagePosition
+}:ImageEditorProps) => {
   // Refs
   const canvasBodyRef = useRef(null);
   const canvasSkinToneRef = useRef(null);
@@ -39,14 +47,11 @@ const ImageEditor = ({
   const defaultSkinTone = skinTone || "grayscale(100%)";
 
 
-  // State
-  const [imagePosition, setImagePosition] = useState({ x: 0, y: 0 });
-  const [scale, setScale] = useState(0.7);
-  const [rotation, setRotation] = useState(0);
+
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [loading, setLoading] = useState(false);
-
+  
   const drawImageOnCanvas = (canvasRef, imageSrc, filter = "none") => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -106,10 +111,10 @@ const ImageEditor = ({
     imageElement.crossOrigin = "anonymous";
 
     imageElement.onload = () => {
-      const imageWidth = imageElement.naturalWidth;
-      const imageHeight = imageElement.naturalHeight;
+      const imageWidth = imageElement.naturalWidth/3;
+      const imageHeight = imageElement.naturalHeight/3;
       const centerX = canvas.width / 2;
-      const centerY = canvas.height / 2;
+      const centerY = canvas.height / 4;
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.save();
@@ -135,22 +140,28 @@ const ImageEditor = ({
     setDragStart({ x: e.clientX - rect.left, y: e.clientY - rect.top });
     setIsDragging(true);
   };
-
+  
   const handleMouseMove = (e) => {
     if (!isDragging) return;
     const rect = canvasRef.current.getBoundingClientRect();
-    const dx = e.clientX - rect.left - dragStart.x;
-    const dy = e.clientY - rect.top - dragStart.y;
+    const dx = e.clientX - rect.left - dragStart.x;  // Horizontal movement (left/right)
+    const dy = e.clientY - rect.top - dragStart.y;   // Vertical movement (up/down)
+  
+    // Update position if there is movement in either direction
     setImagePosition((prevPos) => ({
       x: prevPos.x + dx,
       y: prevPos.y + dy,
     }));
+  
+    // Update the starting position for the next move
     setDragStart({ x: e.clientX - rect.left, y: e.clientY - rect.top });
   };
-
+  
   const handleMouseUp = () => {
     setIsDragging(false);
   };
+  
+  // Move left function
 
   const handleWheel = (e) => {
     if (e.deltaY > 0) {
@@ -160,28 +171,9 @@ const ImageEditor = ({
     }
   };
 
-  const handleRotate = (direction) => {
-    setRotation((prevRotation) => prevRotation + direction * 5); 
-  };
 
-  const handleMove = (direction) => {
-    switch (direction) {
-      case "up":
-        setImagePosition((prevPos) => ({ ...prevPos, y: prevPos.y - 5 }));
-        break;
-      case "down":
-        setImagePosition((prevPos) => ({ ...prevPos, y: prevPos.y + 5 }));
-        break;
-      case "left":
-        setImagePosition((prevPos) => ({ ...prevPos, x: prevPos.x - 5 }));
-        break;
-      case "right":
-        setImagePosition((prevPos) => ({ ...prevPos, x: prevPos.x + 5 }));
-        break;
-      default:
-        break;
-    }
-  };
+
+
   
 
   const handleAddToCart = async (id: string, faceImage: string) => {
@@ -241,13 +233,14 @@ const ImageEditor = ({
     }
   };
   
+
   
   return (
-    <div className="flex flex-col border-r border-r-gray-500 items-center justify-center w-[50%] max-sm:w-full max-sm:border-b z-0 lg:min-h-[90vh] max-sm:min-h-[50vh] md:min-h-[80vh]">
-      <div className="relative w-full flex justify-center items-center  bg-center bg-no-repeat max-sm:scale-50 md:scale-75 lg:scale-100 lg:min-h-[90vh] max-sm:min-h-[50vh] md:min-h-[80vh] max-sm:h-[35vh]">
+    <div className={` flex-col border-r border-r-gray-500 items-center justify-center w-[50%] max-sm:w-full max-sm:border-b z-0 lg:min-h-[80vh] max-sm:min-h-[400px]  md:min-h-[80vh] ${step===0 || step===4 || step===7 ||step===8 ? "flex":"max-sm:hidden"}`}>
+      <div className="relative w-full flex justify-center items-center  bg-center bg-no-repeat lg:min-h-[90vh] max-sm:min-h-[50vh] md:min-h-[80vh] max-sm:h-[35vh]">
         <div
           ref={containerRef}
-          className="relative w-[557px] h-[800px] flex justify-center items-center top-0  "
+          className="relative w-[557px] h-[800px] flex justify-center items-center top-0 max-sm:scale-50 "
         >
           {/* Background Layers */}
           <canvas
@@ -262,9 +255,9 @@ const ImageEditor = ({
             <canvas
               id="canvasRef"
               ref={canvasRef}
-              width={"400px"}
-              height={"500px"}
-              className=" absolute top-3 hover:cursor-grab hover:border-[6px] rounded-full border-[6px] border-transparent hover:border-yellow-500 hover:border-dotted z-40"
+              width={"557px"}
+              height={"800px"}
+              className=" sticky top-3 hover:cursor-grab hover:border-[6px] rounded-full border-[6px] border-transparent z-40 faceImage"
               onMouseDown={handleMouseDown}
               onMouseMove={handleMouseMove}
               onMouseUp={handleMouseUp}
@@ -272,8 +265,8 @@ const ImageEditor = ({
             />
           ) : (
             <img
-              className="top-1 absolute max-h-[500px] z-40"
-              src="/images/Layer_40_face_preview.png"
+              className="top-1 absolute max-h-[450px] z-40 max-sm:scale-90"
+              src={"/images/Layer_40_face_preview.png"}
               alt="face preview"
             />
           )}
@@ -289,7 +282,7 @@ const ImageEditor = ({
             ref={canvasTransparentRef}
             width={"557px"}
             height={"800px"}
-            className="absolute  h-full z-0"
+            className="absolute  h-full z-50 pointer-events-none"
           />
           <canvas
             ref={canvasBodyRef}
@@ -304,10 +297,10 @@ const ImageEditor = ({
       {/* Controls */}
       {step === 7 && (
         <>
-          <div className="flex gap-4 mt-10 absolute right-10 bottom-10 max-sm:bottom-0">
+          <div className="flex gap-4  absolute  right-10 bottom-1   ">
             <button
               onClick={() => handleAddToCart(productId, faceImage)}
-              className="bg-green-600 max-sm:scale-75 text-white px-6 py-3 flex justify-center items-center rounded-md text-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="bg-green-600 text-white px-6 py-3 flex justify-center items-center rounded-md text-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"
             >
               {loading ? (
                 <AiOutlineLoading3Quarters className="animate-spin inline-block mr-2" />
@@ -317,55 +310,11 @@ const ImageEditor = ({
               Add to Basket
             </button>
           </div>
-
-          {step === 7 && (
-        <div className="controls mt-1">
-          <div className="flex gap-2 justify-center items-center max-sm:gap-0">
-            <button
-              onClick={() => handleRotate(1)}
-              className="bg-blue-600 text-white px-2 py-1 text-sm rounded-md hover:bg-blue-700 flex items-center gap-2 max-sm:flex-col max-sm:scale-75"
-            >
-              <FaSync className="inline-block text-sm font-light" /> <span className="inline-block">Rotate right</span>
-            </button>
-            <button
-              onClick={() => handleRotate(-1)}
-              className="bg-blue-600 text-white px-2 py-1 text-sm rounded-md hover:bg-blue-700 flex items-center gap-2  max-sm:flex-col max-sm:scale-75"
-            >
-              <FaSync className="inline-block transform rotate-180" /> <span className="inline-block">Rotate left</span>
-            </button>
-
-            <button
-              onClick={() => handleMove("up")}
-              className="bg-gray-600 text-white px-2 py-1 text-sm rounded-md hover:bg-gray-700 flex items-center gap-2  max-sm:flex-col max-sm:scale-75"
-            >
-              <FaArrowAltCircleUp className="inline-block text-sm font-light" /> <span className="inline-block">Up</span>
-            </button>
-            <button
-              onClick={() => handleMove("down")}
-              className="bg-gray-600 text-white px-2 py-1 text-sm rounded-md hover:bg-gray-700 flex items-center gap-2  max-sm:flex-col max-sm:scale-75"
-            >
-              <FaArrowAltCircleDown className="inline-block text-sm font-light" /> <span className="inline-block">Down</span>
-            </button>
-
-            <button
-              onClick={() => setScale((prevScale) => prevScale + 0.01)}
-              className="bg-gray-600 text-white px-2 py-1 text-sm rounded-md hover:bg-gray-700 flex items-center gap-2 max-sm:flex-col max-sm:scale-75"
-            >
-              <FaPlus className="inline-block text-sm font-light" /> <span className="inline-block">Zoom in</span>
-            </button>
-            <button
-              onClick={() =>
-                setScale((prevScale) => Math.max(prevScale - 0.01, 0.01))
-              }
-              className="bg-gray-600 text-white px-2 py-1 text-sm rounded-md hover:bg-gray-700 flex items-center gap-2 max-sm:flex-col max-sm:scale-75"
-            >
-              <FaMinus className="inline-block text-sm font-light" /> <span className="inline-block">Zoom out</span>
-            </button>
-          </div>
-        </div>
+              </>
       )}
-        </>
-      )}
+       
+       
+      
     </div>
   );
 };

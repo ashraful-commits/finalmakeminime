@@ -63,7 +63,16 @@ export default {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			}
-  		}
+  		},
+		  animation: {
+			slide: 'slide 1.5s ease-in-out infinite alternate',
+		  },
+		  keyframes: {
+			slide: {
+			  '0%': { transform: 'translateY(0)' },
+			  '100%': { transform: 'translateY(calc(-35vh + 4px))' },
+			}
+		  }
   	}
   },
   plugins: [require("tailwindcss-animate")],

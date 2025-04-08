@@ -8,7 +8,10 @@ interface CameraComponentProps {
   setUploadedPhoto: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-const CameraComponent: React.FC<CameraComponentProps> = ({ setStep, setUploadedPhoto }) => {
+const CameraComponent: React.FC<CameraComponentProps> = ({
+  setStep,
+  setUploadedPhoto,
+}) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleTakePhoto = (dataUri: string) => {

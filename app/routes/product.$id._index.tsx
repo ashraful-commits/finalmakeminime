@@ -17,7 +17,10 @@ import {
 
 export const meta: MetaFunction = () => [
   { title: "Product Customization" },
-  { name: "description", content: "facepillow - Customize your own cuddly pillow" },
+  {
+    name: "description",
+    content: "facepillow - Customize your own cuddly pillow",
+  },
 ];
 
 export default function Index() {
@@ -214,7 +217,6 @@ export default function Index() {
             <FaStar className="text-4xl text-yellow-500" />
             <FaStar className="text-4xl text-yellow-500" />
           </div>
-          
         </div>
       </section>
       <section className="py-12 md:py-16 lg:py-20 w-full bg-gray-100">

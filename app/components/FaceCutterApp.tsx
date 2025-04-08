@@ -3,18 +3,15 @@ import * as fabric from "fabric";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { FaCheck } from "react-icons/fa"; // Added for brush, undo, and redo icons
 import { IoArrowBackOutline } from "react-icons/io5"; // Added for the back button
-const FaceCutterApp = ({ faceImage, setStep, setCropedImage }) => {
+const FaceCutterApp = ({ faceImage, setStep, setCropedImage, step }) => {
   const [removeBG, setRemoveBG] = useState(null);
   const [error, setError] = useState("");
-
   const canvasRef = useRef(null);
   const canvasInstance = useRef(null);
   const imageRef = useRef(null);
   const [removeLoader, setRemoveLoader] = useState(false);
 
-
   useEffect(() => {
-
     const loadImage = () => {
       if (removeBG instanceof Blob || removeBG instanceof File) {
         const reader = new FileReader();
@@ -54,8 +51,7 @@ const FaceCutterApp = ({ faceImage, setStep, setCropedImage }) => {
     loadImage();
   }, [removeBG]);
 
-
-  // face cut handler 
+  // face cut handler
   const handleFaceCut = async () => {
     try {
       setRemoveLoader(true);
@@ -103,18 +99,18 @@ const FaceCutterApp = ({ faceImage, setStep, setCropedImage }) => {
         throw new Error(data.error || "FaceCut processing failed.");
       }
       if (data.imageUrl) {
-        const parts = uploadedUrl.split('/');
+        const parts = uploadedUrl.split("/");
         const folder = parts[parts.length - 2];
         const filenameWithExt = parts[parts.length - 1];
-        const filename = filenameWithExt.split('.')[0]; // remove extension
+        const filename = filenameWithExt.split(".")[0]; // remove extension
         const public_id = `${folder}/${filename}`;
-      
-      const result=  await fetch('/api/delete', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+
+        const result = await fetch("/api/delete", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ public_id }),
         });
-        console.log(result)
+        console.log(result);
       }
       setStep(3);
       setRemoveBG(data.imageUrl);
@@ -131,32 +127,45 @@ const FaceCutterApp = ({ faceImage, setStep, setCropedImage }) => {
     setStep(1);
     setError("");
   };
-  const handleConfirm = () => {
-    setStep(3);
-    setError("");
-  };
 
   return (
-    <div className="w-[50%] max-sm:w-full flex space-y-10 max-sm:space-y-1 flex-col items-center justify-center border-gray-300 lg:border-r md:border-r max-sm:border-b min-h-[80vh] max-sm:min-h-[50vh] p-4 bg-white  rounded-lg relative">
+    <div
+      className={`w-[50%] max-sm:w-full flex space-y-10  flex-col items-center justify-center border-gray-300 lg:border-r md:border-r max-sm:border-none min-h-[80vh] p-4 bg-white max-sm:space-y-6   rounded-lg relative ${
+        step !== 7 ? " max-sm:min-h-[90vh]" : ""
+      }`}
+    >
       <h2 className="text-xl font-semibold text-center text-gray-800 mb-6">
         Edit you photo
       </h2>
       {error && <p className="text-red-500 text-sm">{error}</p>}
       {!removeBG && (
-        <div className="w-full h-[35vh] flex justify-center items-center">
+        <div className="relative  h-[35vh] max-sm:h-[350px] flex justify-center items-center w-[50%]">
+          <div className="absolute top-0 left-0 w-16 h-16 border-t-[6px] border-l-[6px] border-blue-500"></div>
+
+          {/* Top-right corner */}
+          <div className="absolute top-0 right-0 w-16 h-16 border-t-[6px] border-r-[6px] border-blue-500"></div>
+
+          {/* Bottom-left corner */}
+          <div className="absolute bottom-0 left-0 w-16 h-16 border-b-[6px] border-l-[6px] border-blue-500"></div>
+          <div className="absolute bottom-0 right-0 w-16 h-16 border-b-[6px] border-r-[6px] border-blue-500"></div>
+          {removeLoader && (
+            <div className="absolute bottom-0 left-0 w-full h-2 animate-slide bg-red-900"></div>
+          )}
           <img
             src={faceImage}
-            className="w-auto h-auto border-2 max-h-[300px] p-3"
+            className="w-auto h-auto  max-h-[300px] p-3"
             alt="faceImage"
           />
         </div>
       )}
 
-      <div className="flex justify-center  gap-4 mb-6 mt-20">
-        
-
-    
-
+      <div className="flex justify-center  gap-4 mb-6 mt-20 max-sm:mt-0">
+        <button
+          onClick={handleBack}
+          className="px-2 py-1 text-sm  rounded-md bg-gray-100  hover:bg-gray-700 text-gray-500 bg-opacity-50 border hover:text-white border-gray-500 font-medium flex items-center justify-center "
+        >
+          <IoArrowBackOutline className="mr-2" /> Back
+        </button>
 
         {!removeBG && (
           <button
@@ -168,21 +177,6 @@ const FaceCutterApp = ({ faceImage, setStep, setCropedImage }) => {
               <AiOutlineLoading3Quarters className="animate-spin" />
             )}
             {removeLoader ? "Wait less than 1 min" : "Cutout face"}
-          </button>
-        )}
-
-        <button
-          onClick={handleBack}
-          className="px-2 py-1 text-sm  rounded-md bg-gray-100  hover:bg-gray-700 text-gray-500 bg-opacity-50 border hover:text-white border-gray-500 font-medium flex items-center justify-center "
-        >
-          <IoArrowBackOutline className="mr-2" /> Back
-        </button>
-        {!error && (
-          <button
-            onClick={handleConfirm}
-            className="px-2 py-1 text-sm  rounded-md bg-gray-100  hover:bg-blue-700 text-blue-500 bg-opacity-50 border hover:text-white border-blue-500 font-medium flex items-center justify-center "
-          >
-            <FaCheck className="mr-2" /> confirm
           </button>
         )}
       </div>

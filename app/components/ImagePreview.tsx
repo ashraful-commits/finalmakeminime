@@ -1,8 +1,15 @@
 import React, { useState } from "react";
 import { AiOutlineArrowLeft } from "react-icons/ai";
 import { AiOutlineCheck } from "react-icons/ai"; // Icon for the Confirm button
+interface imgePreviewType {
+  croppedImage: string;
+  setStep: React.Dispatch<React.SetStateAction<number>>;
+  setCropedImage: React.Dispatch<React.SetStateAction<string | null>>;
+  step: number,
+  setFaceImage: React.Dispatch<React.SetStateAction<string | null>>
+}
 
-function ImagePreview({ croppedImage, setStep, setCropedImage }) {
+function ImagePreview({ croppedImage, setStep, setCropedImage,step,setFaceImage }:imgePreviewType) {
   const [brightness, setBrightness] = useState(100);
   const [contrast, setContrast] = useState(100);
   const [rotation, setRotation] = useState(0);
@@ -13,7 +20,7 @@ function ImagePreview({ croppedImage, setStep, setCropedImage }) {
     const context = canvas.getContext("2d");
 
     const img = new Image();
-    img.crossOrigin = "anonymous"; // Handle CORS
+    img.crossOrigin = "anonymous"; 
 
     img.src = croppedImage;
     img.onload = () => {
@@ -40,6 +47,7 @@ function ImagePreview({ croppedImage, setStep, setCropedImage }) {
       );
 
       const dataUrl = canvas.toDataURL();
+      setFaceImage(dataUrl);
       setCropedImage(dataUrl);
       setStep(4);
       const finalImages = localStorage.getItem("finalImage");
@@ -57,7 +65,7 @@ function ImagePreview({ croppedImage, setStep, setCropedImage }) {
   };
 
   return (
-    <div className="flex w-[50%] max-sm:w-full flex-col items-center justify-center p-6 space-y-6">
+    <div className={`flex w-[50%] max-sm:w-full flex-col items-center justify-center p-6 space-y-6 ${step !==7 ? " max-sm:max-h-[90vh] max-sm:h-[90vh] " : ""}`}>
       {croppedImage && (
         <>
           <div
@@ -74,7 +82,7 @@ function ImagePreview({ croppedImage, setStep, setCropedImage }) {
               alt="Cropped"
             />
           </div>
-          <div className="w-full  max-w-md space-y-4 max-sm:scale-75 mb-10 ">
+          <div className="w-full max-sm: scale-75  max-w-md space-y-4  mb-10 ">
             <div>
               <label htmlFor="brightness" className="block text-sm font-medium text-gray-700">
                 Brightness

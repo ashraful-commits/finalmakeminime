@@ -82,3 +82,16 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes slide {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(calc(-35vh + 4px));
+  }
+}
+
+.animate-slide {
+  animation: slide 1.5s ease-in-out infinite alternate;
+}

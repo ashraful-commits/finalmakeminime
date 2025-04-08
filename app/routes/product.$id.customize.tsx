@@ -1,15 +1,16 @@
 import { useState, useEffect } from "react";
 import { IoIosArrowBack, IoIosCloseCircleOutline } from "react-icons/io";
-import { FaCheck } from "react-icons/fa";
+
 import FaceCutterApp from "~/components/FaceCutterApp";
+import { IoClose } from "react-icons/io5";
 
 import ImageCropper from "~/components/ImageCroper";
 import ImageEditor2 from "~/components/ImageEditor2";
 import ImagePreview from "~/components/ImagePreview";
-import { AiOutlineArrowLeft } from "react-icons/ai";
+
 import CameraComponent from "~/components/Camera";
 import FinalPreview from "~/components/FinalPreview";
-import { MetaFunction, useLoaderData, useNavigate } from "@remix-run/react";
+import { MetaFunction, useLoaderData } from "@remix-run/react";
 import { convertNumberToImageLink } from "~/lib/server.utlis";
 import { LoaderFunction } from "@remix-run/node";
 export const meta: MetaFunction = () => {
@@ -21,6 +22,9 @@ export const meta: MetaFunction = () => {
 
 import { json } from "@remix-run/node";
 import { Buffer } from "buffer";
+import SkinTone from "~/components/SkinTone";
+import Position from "~/components/Position";
+import { FaX } from "react-icons/fa6";
 
 // Type for product meta data
 interface ProductMetaData {
@@ -164,9 +168,13 @@ export default function ProductIdCustomize() {
   const [skinToneImage, setSkinToneImage] = useState<string>("");
   const [uploadedPhoto, setUploadedPhoto] = useState<string>("");
   const [croppedImage, setCropedImage] = useState<string>("");
+  const [faceImage, setFaceImage] = useState<string>("");
   const [skinTone, setSkinTone] = useState<string>(
     "invert(71%) sepia(51%) saturate(280%) hue-rotate(340deg) brightness(86%) contrast(88%)"
   );
+  const [imagePosition, setImagePosition] = useState({ x: 0, y: 0 });
+  const [rotation, setRotation] = useState<number>(0);
+  const [scale, setScale] = useState(0.7);
   const [step, setStep] = useState<number>(0);
 
   useEffect(() => {
@@ -248,101 +256,7 @@ export default function ProductIdCustomize() {
     const storedImage = localStorage.getItem("finalImage");
     setImages(storedImage ? JSON.parse(storedImage) : []);
   }, [step]);
-  const skinTones = [
-    {
-      id: 1,
-      filter:
-        "invert(91%) sepia(51%) saturate(280%) hue-rotate(340deg) brightness(86%) contrast(88%)", // Light Yellow
-    },
-    {
-      id: 2,
-      filter:
-        "invert(95%) sepia(51%) saturate(280%) hue-rotate(340deg) brightness(86%) contrast(88%)", // Light Yellow
-    },
-    {
-      id: 3,
-      filter:
-        "invert(81%) sepia(51%) saturate(280%) hue-rotate(340deg) brightness(86%) contrast(88%)", // Light Yellow
-    },
-    {
-      id: 4,
-      filter:
-        "invert(85%) sepia(51%) saturate(280%) hue-rotate(340deg) brightness(86%) contrast(88%)", // Light Yellow
-    },
-    {
-      id: 5,
-      filter:
-        "invert(71%) sepia(51%) saturate(280%) hue-rotate(340deg) brightness(86%) contrast(88%)", // Light Yellow
-    },
-    {
-      id: 6,
-      filter:
-        "invert(75%) sepia(51%) saturate(280%) hue-rotate(340deg) brightness(86%) contrast(88%)", // Light Yellow
-    },
-    {
-      id: 7,
-      filter:
-        "invert(61%) sepia(51%) saturate(280%) hue-rotate(340deg) brightness(86%) contrast(88%)", // Light Yellow
-    },
-    {
-      id: 8,
-      filter:
-        "invert(65%) sepia(51%) saturate(280%) hue-rotate(340deg) brightness(86%) contrast(88%)", // Light Yellow
-    },
-    {
-      id: 9,
-      filter:
-        "invert(51%) sepia(51%) saturate(280%) hue-rotate(340deg) brightness(86%) contrast(88%)", // Light Yellow
-    },
-    {
-      id: 10,
-      filter:
-        "invert(55%) sepia(51%) saturate(280%) hue-rotate(340deg) brightness(86%) contrast(88%)", // Light Yellow
-    },
-    {
-      id: 11,
-      filter:
-        "invert(41%) sepia(51%) saturate(280%) hue-rotate(340deg) brightness(86%) contrast(88%)", // Light Yellow
-    },
-    {
-      id: 12,
-      filter:
-        "invert(45%) sepia(51%) saturate(280%) hue-rotate(340deg) brightness(86%) contrast(88%)", // Light Yellow
-    },
-    {
-      id: 13,
-      filter:
-        "invert(31%) sepia(51%) saturate(280%) hue-rotate(340deg) brightness(86%) contrast(88%)", // Light Yellow
-    },
-    {
-      id: 14,
-      filter:
-        "invert(35%) sepia(51%) saturate(280%) hue-rotate(340deg) brightness(86%) contrast(88%)", // Light Yellow
-    },
-    {
-      id: 15,
-      filter:
-        "invert(21%) sepia(51%) saturate(280%) hue-rotate(340deg) brightness(86%) contrast(88%)", // Light Yellow
-    },
-    {
-      id: 16,
-      filter:
-        "invert(25%) sepia(51%) saturate(280%) hue-rotate(340deg) brightness(86%) contrast(88%)", // Light Yellow
-    },
-    {
-      id: 17,
-      filter:
-        "invert(11%) sepia(51%) saturate(280%) hue-rotate(340deg) brightness(86%) contrast(88%)", // Light Yellow
-    },
-    {
-      id: 18,
-      filter:
-        "invert(5%) sepia(51%) saturate(280%) hue-rotate(340deg) brightness(86%) contrast(88%)", // Light Yellow
-    },
-  ];
-  const handleConfirm = () => {
-    setStep(7);
-  };
+
   useEffect(() => {
     setTimeout(() => {
       setLoading(false);
@@ -377,12 +291,12 @@ export default function ProductIdCustomize() {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [unsavedChanges]);
-  
+  console.log(step);
   return (
-    <div className="h-screen max-sm:h-auto  text-black min-h-[80vh]">
+    <div className="h-screen w-[100vw] text-black min-h-[80vh] relative max-sm:h-[97vh]">
       {/* Exit Link */}
       {loading ? (
-        <div className="loader w-full h-screen flex flex-col justify-center items-center">
+        <div className="loader w-full h-screen flex gap-3 flex-col justify-center items-center">
           <img src="/images/happiness.png" alt="" />
           <p>Let's get this Started...</p>
           <p>Personalisation Tool is Loading</p>
@@ -426,10 +340,10 @@ export default function ProductIdCustomize() {
           </div>
 
           {/* Main Section */}
-          <div className="flex gap-2 max-sm:flex-col justify-center items-center min-h-[80vh]">
+          <div className="w-full flex gap-2 max-sm:flex-col justify-center items-center min-h-[80vh]">
             {/* Left Section - Image Preview */}
             <ImageEditor2
-              faceImage={croppedImage}
+              faceImage={faceImage}
               bodyImage={bodyImage}
               skinTone={skinTone}
               headBackImage={headBackImage}
@@ -437,6 +351,12 @@ export default function ProductIdCustomize() {
               step={step}
               setStep={setStep}
               productId={productId}
+              setImagePosition={setImagePosition}
+              imagePosition={imagePosition}
+              rotation={rotation}
+              setRotation={setRotation}
+              setScale={setScale}
+              scale={scale}
             />
 
             {/* Right Section - Upload/Take Photo */}
@@ -445,6 +365,7 @@ export default function ProductIdCustomize() {
                 croppedImage={croppedImage}
                 setUploadedPhoto={setUploadedPhoto}
                 setCropedImage={setCropedImage}
+                setFaceImage={setFaceImage}
                 step={step}
                 setStep={setStep}
               />
@@ -458,144 +379,103 @@ export default function ProductIdCustomize() {
                     setUploadedPhoto={setUploadedPhoto}
                     setCropedImage={setCropedImage}
                     setStep={setStep}
+                    step={step}
                   />
                 )}
               </div>
             )}
             {step === 0 && (
-              <div className="w-[50%] max-sm:w-full flex flex-col items-center justify-center">
-                <label
-                  htmlFor="uploadphoto"
-                  className="mt-10 text-blue-500 font-semibold min-w-[200px] px-10 py-6 bg-blue-200 bg-opacity-50 border border-blue-500  hover:text-white hover:bg-blue-600 rounded-md shadow-sm cursor-pointer flex justify-center max-sm:scale-75 items-center"
-                >
-                  Upload Photo
-                </label>
-                <input
-                  type="file"
-                  onChange={handleUploadPhoto}
-                  className="hidden"
-                  name="uploadphoto"
-                  id="uploadphoto"
-                />
-                <button
-                  onClick={handleTakePhoto}
-                  className="mt-3 min-w-[200px] px-10 py-6 bg-green-200 font-semibold hover:bg-green-600 rounded-md shadow-sm  cursor-pointer text-green-500 bg-opacity-50 border border-green-500  flex justify-center items-center hover:text-white  max-sm:scale-75"
-                >
-                  Take Photo
-                </button>
+              <div
+                className={`w-[50%]   max-sm:w-full flex flex-col  items-center justify-center max-sm:min-h-[50vh]`}
+              >
+                <div className="w-full flex flex-col items-center justify-center">
+                  <label
+                    htmlFor="uploadphoto"
+                    className="mt-10 max-sm:mt-3 text-blue-500 font-semibold min-w-[200px] px-10 py-6 bg-blue-200 bg-opacity-50 border border-blue-500  hover:text-white hover:bg-blue-600 rounded-md shadow-sm cursor-pointer flex justify-center max-sm:scale-75 items-center"
+                  >
+                    Upload Photo
+                  </label>
+                  <input
+                    type="file"
+                    onChange={handleUploadPhoto}
+                    className="hidden"
+                    name="uploadphoto"
+                    id="uploadphoto"
+                  />
+                  <button
+                    onClick={handleTakePhoto}
+                    className="mt-3 max-sm:mt-0 min-w-[200px] px-10 py-6 bg-green-200 font-semibold hover:bg-green-600 rounded-md shadow-sm  cursor-pointer text-green-500 bg-opacity-50 border border-green-500  flex justify-center items-center hover:text-white  max-sm:scale-75"
+                  >
+                    Take Photo
+                  </button>
+                </div>
 
-                <span className="mt-5 text-sm font-light ">
-                  For any tips follow our guide{" "}
-                  <a className="hover:underline text-blue-900" href="/here">
-                    here
-                  </a>
-                </span>
+                <div className="w-full  flex flex-col items-center justify-center">
+                  <span className="mt-5 text-sm font-light ">
+                    For any tips follow our guide{" "}
+                    <a className="hover:underline text-blue-900" href="/here">
+                      here
+                    </a>
+                  </span>
 
-                <p className="mt-10 max-sm:mt-2 text-md text-gray-500">
-                  You have {images.length} uploaded{" "}
-                  {images.length === 1 ? "image" : "images"}
-                </p>
+                  <p className="mt-10 max-sm:mt-2 text-md text-gray-500">
+                    You have {images.length} uploaded{" "}
+                    {images.length === 1 ? "image" : "images"}
+                  </p>
 
-                {/* Uploaded Images Section */}
-                <div className="w-full px-5 mt-10 max-sm:mt-3">
-                  {images.length > 0 && (
-                    <div className="flex justify-between items-center">
-                      <h6 className="font-semibold">Uploaded Images</h6>
-                      {images.length > 0 && (
-                        <button
-                          className="text-blue-500 underline font-semibold"
-                          onClick={handleClearPhotos}
-                        >
-                          Clear photos
-                        </button>
-                      )}
-                    </div>
-                  )}
-
-                  <div className="mt-5 mb-5 flex gap-3 flex-wrap">
-                    {images.map((item, index) => (
-                      <div
-                        key={index}
-                        className="relative flex flex-col items-center"
-                      >
-                        <button
-                          className="absolute top-[-8px] right-[-8px] bg-white text-red-500 rounded-full p-1 hover:text-red-700"
-                          onClick={() => handleRemoveImage(index)}
-                        >
-                          <IoIosCloseCircleOutline className="text-2xl" />
-                        </button>
-                        <img
-                          className="w-20 h-20 object-cover rounded"
-                          src={item}
-                          alt={`Uploaded ${index + 1}`}
-                        />
-                        <button
-                          onClick={() => handleEdit(index)}
-                          className="underline text-sm font-light  mt-2  hover:text-blue-500"
-                        >
-                          Edit
-                        </button>
+                  {/* Uploaded Images Section */}
+                  <div className="w-full px-5 mt-10 max-sm:mt-3">
+                    {images.length > 0 && (
+                      <div className="flex justify-between items-center">
+                        <h6 className="font-semibold">Uploaded Images</h6>
+                        {images.length > 0 && (
+                          <button
+                            className="text-blue-500 underline font-semibold"
+                            onClick={handleClearPhotos}
+                          >
+                            Clear photos
+                          </button>
+                        )}
                       </div>
-                    ))}
+                    )}
+
+                    <div className="mt-5 mb-5 flex gap-3 flex-wrap">
+                      {images.map((item, index) => (
+                        <div
+                          key={index}
+                          className="relative flex flex-col items-center"
+                        >
+                          <button
+                            className="absolute top-[-8px] right-[-8px] bg-blue-500 text-white rounded-full p-1   w-5 h-5 flex justify-center items-center"
+                            onClick={() => handleRemoveImage(index)}
+                          >
+                            <IoClose className="text-sm" />
+                          </button>
+                          <img
+                            className="w-20 h-20 object-cover rounded"
+                            src={item}
+                            alt={`Uploaded ${index + 1}`}
+                          />
+                          <button
+                            onClick={() => handleEdit(index)}
+                            className="underline text-sm font-bold  mt-2  hover:text-blue-500"
+                          >
+                            Edit
+                          </button>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               </div>
             )}
-            {step === 4 && skinTone && (
-              <div className="w-full max-w-md mx-auto flex space-y-3 max-sm:scale-75 flex-col items-center justify-center p-6">
-                {/* Section Title and Navigation Buttons */}
-                <div className="flex gap-4 mb-5 justify-between items-center w-full">
-                  <button
-                    className="px-3 py-1 text-sm font-light   text-gray-50 bg-gray-500 rounded-md hover:bg-gray-600 "
-                    onClick={() => setStep(3)}
-                  >
-                    Adjust color
-                  </button>
-                  <button
-                    className="px-2 py-1 text-sm font-light text-white bg-gray-600 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
-                    onClick={() => setStep(0)}
-                  >
-                    Change Face
-                  </button>
-                  <button
-                    onClick={() => setStep(3)}
-                    className="bg-blue-100 bg-opacity-50 border border-blue-500 text-blue-500 hover:text-white text-sm font-light  px-2 py-1 rounded-md  hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-black"
-                  >
-                    <AiOutlineArrowLeft className="inline-block mr-2" />
-                    Back
-                  </button>
-                </div>
-
-                {/* Skin Tone Selection Grid */}
-                <div className="grid grid-cols-4 gap-4 w-full justify-center items-center border p-4">
-                  {skinTones.map((tone) => (
-                    <button
-                      key={tone.id}
-                      className="w-8 h-8 rounded-full"
-                      style={{
-                        backgroundColor: "black",
-                        filter: tone.filter,
-                      }}
-                      onClick={() => {
-                        setSkinTone(tone.filter),
-                          localStorage.setItem("skinTone", tone.filter);
-                      }}
-                      aria-label={`Select skin tone ${tone.id}`}
-                    />
-                  ))}
-                </div>
-                
-                {/* Action Buttons */}
-                <div className="w-full flex justify-end gap-6 items-center mt-10">
-                  <button
-                    onClick={handleConfirm}
-                    className="bg-blue-100 bg-opacity-50 border border-blue-500 text-blue-500 hover:text-white text-sm font-light  px-2 py-1 rounded-md  hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-black"
-                  >
-                    <FaCheck className="inline-block mr-2" />
-                    Confirm
-                  </button>
-                </div>
-              </div>
+            {step === 8 && skinTone && (
+              <SkinTone
+                step={step}
+                setStep={setStep}
+                skinTone={skinTone}
+                setSkinTone={setSkinTone}
+              />
             )}
 
             {step === 5 && croppedImage && (
@@ -603,6 +483,7 @@ export default function ProductIdCustomize() {
                 faceImage={croppedImage}
                 setStep={setStep}
                 setCropedImage={setCropedImage}
+                step={step}
               />
             )}
 
@@ -611,6 +492,7 @@ export default function ProductIdCustomize() {
                 setStep={setStep}
                 setCropedImage={setCropedImage}
                 setUploadedPhoto={setUploadedPhoto}
+                step={step}
               />
             )}
             {step === 7 && (
@@ -618,6 +500,18 @@ export default function ProductIdCustomize() {
                 setStep={setStep}
                 croppedImage={croppedImage}
                 skinTone={skinTone}
+                step={step}
+              />
+            )}
+            {step === 4 && (
+              <Position
+                step={step}
+                setStep={setStep}
+                setImagePosition={setImagePosition}
+                imagePosition={imagePosition}
+                rotation={rotation}
+                setRotation={setRotation}
+                setScale={setScale}
               />
             )}
           </div>
