@@ -77,7 +77,7 @@ function ImagePreview({ croppedImage, setStep, setCropedImage,step,setFaceImage 
             }}
           >
             <img
-              className="object-contain w-[50%] h-full"
+              className="object-contain w-[100%] h-full"
               src={croppedImage}
               alt="Cropped"
             />
