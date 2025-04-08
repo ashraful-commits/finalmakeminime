@@ -55,7 +55,8 @@ const Position = ({ setStep, setImagePosition, setRotation, setScale }) => {
   };
   return (
     <div className="controls mt-1  w-[50%] max-w-4xl max-sm:max-w-full ">
-      <div className="grid grid-cols-2 gap-2  justify-center items-center max-sm:gap-4 max-sm:flex max-sm:justify-center">
+      <h2 className="text-center my-5 text-2xl">Position</h2>
+      <div className="grid grid-cols-3 gap-2  justify-center items-center max-sm:gap-4 max-sm:flex max-sm:justify-center">
         <div className="flex flex-col justify-center items-center order-2">
           <span className="text-blue-500">Rotate</span>
           <div className="flex gap-2 justify-center items-center">
@@ -73,7 +74,7 @@ const Position = ({ setStep, setImagePosition, setRotation, setScale }) => {
             </button>
           </div>
         </div>
-        <div className="flex flex-col justify-center items-center order-1  col-span-2 max-sm:col-span-1">
+        <div className="flex flex-col justify-center items-center order-1  max-sm:col-span-1">
           <span className="text-blue-500">Move</span>
           <div className="flex gap-1 justify-center items-center">
             <button

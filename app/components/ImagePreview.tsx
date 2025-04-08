@@ -82,7 +82,7 @@ function ImagePreview({ croppedImage, setStep, setCropedImage,step,setFaceImage 
               alt="Cropped"
             />
           </div>
-          <div className="w-full max-sm: scale-75  max-w-md space-y-4  mb-10 ">
+          <div className="w-full max-sm:scale-75  max-w-md space-y-4  mb-10 ">
             <div>
               <label htmlFor="brightness" className="block text-sm font-medium text-gray-700">
                 Brightness
