@@ -120,13 +120,7 @@ const SkinTone = ({ step, setStep, skinTone, setSkinTone }: skinToneType) => {
         >
           Change Face
         </button>
-        <button
-          onClick={() => setStep(3)}
-          className="bg-blue-100 bg-opacity-50 border border-blue-500 text-blue-500 hover:text-white text-sm font-light  px-2 py-1 rounded-md  hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-black"
-        >
-          <AiOutlineArrowLeft className="inline-block mr-2" />
-          Back
-        </button>
+       
       </div>
 
       {/* Skin Tone Selection Grid */}
@@ -150,13 +144,21 @@ const SkinTone = ({ step, setStep, skinTone, setSkinTone }: skinToneType) => {
 
       {/* Action Buttons */}
       <div className="w-full flex justify-end gap-6 items-center mt-10 max-sm:mt-2">
+      <button
+          onClick={() => setStep(3)}
+          className="bg-blue-100 bg-opacity-50 border border-blue-500 text-blue-500 hover:text-white text-sm font-light  px-2 py-1 rounded-md  hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-black"
+        >
+          <AiOutlineArrowLeft className="inline-block mr-2" />
+          Back
+        </button>
         <button
           onClick={handleConfirm}
-          className="bg-blue-100 bg-opacity-50 border border-blue-500 text-blue-500 hover:text-white text-sm font-light  px-2 py-1 rounded-md  hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-black"
+          className="px-8 py-1 bg-blue-500   text-white text-sm rounded hover:bg-blue-800 border flex justify-center items-center gap-2 max-sm:gap-1 "
         >
           <FaCheck className="inline-block mr-2" />
           Confirm
         </button>
+       
       </div>
     </div>
   );

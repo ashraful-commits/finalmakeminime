@@ -176,7 +176,7 @@ export default function ProductIdCustomize() {
   const [scale, setScale] = useState(0.7);
   const [step, setStep] = useState<number>(0);
   const [transform, setTransform] = useState({
-    x: 100,
+    x: 150,
     y: 100,
     width: 200,
     height: 200,
@@ -301,7 +301,7 @@ export default function ProductIdCustomize() {
   }, [unsavedChanges]);
   console.log(step);
   return (
-    <div className="h-screen w-[100vw] max-sm:sticky top-0 left-0 text-black min-h-[80vh] relative max-sm:h-[97vh]">
+    <div className="h-screen w-[100vw] max-sm:w-full  top-0 left-0 text-black min-h-[80vh] relative max-sm:h-[97vh]">
       {/* Exit Link */}
       {loading ? (
         <div className="loader w-full h-screen flex gap-3 flex-col justify-center items-center">
@@ -449,7 +449,7 @@ export default function ProductIdCustomize() {
                       </div>
                     )}
 
-                    <div className="mt-5 mb-5 flex gap-3 flex-wrap">
+                    <div className="mt-5 mb-5 flex gap-3 flex-wrap ">
                       {images.map((item, index) => (
                         <div
                           key={index}

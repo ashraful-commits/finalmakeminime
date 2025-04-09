@@ -55,7 +55,7 @@ const Position = ({ setStep, setTransform }) => {
   const moveLeft = () => {
     setTransform((prev) => ({
       ...prev,
-      x: Math.max(prev.x - 10, 0), // Prevent moving out of bounds
+      x: prev.x - 10, // Prevent moving out of bounds
     }));
   };
 
@@ -74,7 +74,7 @@ const Position = ({ setStep, setTransform }) => {
   return (
     <div className="controls mt-1  w-[50%] max-w-4xl max-sm:max-w-full ">
       <h2 className="text-center max-sm:my-5 my-10 text-lg max-sm:text-sm font-bold w-full">Useing the tools below position the face on the items correctly</h2>
-      <div className="grid grid-cols-3 gap-2  justify-center items-center max-sm:gap-4 max-sm:flex max-sm:justify-center">
+      <div className="flex gap-2  justify-center items-center max-sm:gap-3 max-sm:flex max-sm:justify-center">
         <div className="flex flex-col justify-center items-center order-2">
           <span className="text-blue-500">Rotate</span>
           <div className="flex gap-2 justify-center items-center">
@@ -149,7 +149,7 @@ const Position = ({ setStep, setTransform }) => {
           <FaArrowLeft /> <span className="inline-block">Back</span>
         </button>
         <button
-          className="px-3 text-sm py-2 bg-blue-200 bg-opacity-50 text-blue-500 rounded-lg border border-blue-800 focus:outline-none focus:ring-2 hover:bg-blue-700 hover:text-white focus:ring-blue-500 flex justify-center items-center gap-2"
+          className="px-8 py-1 bg-blue-500   text-white text-sm rounded hover:bg-blue-800 border flex justify-center items-center gap-2 max-sm:gap-1 "
           onClick={handleConfirm}
         >
           <FaCheck /> <span className="inline-block">Confirm</span>

@@ -82,7 +82,7 @@ function ImagePreview({ croppedImage, setStep, setCropedImage,step,setFaceImage 
               alt="Cropped"
             />
           </div>
-          <div className="w-full max-sm:scale-75  max-w-md space-y-4  mb-10 ">
+          <div className="w-full   max-w-md space-y-4  mb-10 ">
             <div>
               <label htmlFor="brightness" className="block text-sm font-medium text-gray-700">
                 Brightness
@@ -147,7 +147,7 @@ function ImagePreview({ croppedImage, setStep, setCropedImage,step,setFaceImage 
               </button>
               <button
                 onClick={handleSave}
-                className="px-3 text-sm py-2 bg-blue-200 bg-opacity-50 text-blue-500 rounded-lg border border-blue-800 focus:outline-none focus:ring-2 hover:bg-blue-700 hover:text-white focus:ring-blue-500"
+                className="px-8 py-1 bg-blue-500   text-white text-sm rounded hover:bg-blue-800 border flex justify-center items-center gap-2 max-sm:gap-1 "
               >
                 <AiOutlineCheck className="inline-block mr-2" />
                 Confirm

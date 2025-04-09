@@ -319,7 +319,7 @@ const ImageEditor = ({
 
   return (
     <div
-      className={` flex-col border-r border-r-gray-500 items-center justify-center w-[50%] max-sm:w-full max-sm:border-b z-0 lg:min-h-[80vh] max-sm:min-h-[400px]  md:min-h-[80vh] ${
+      className={` flex-col border-r border-r-gray-500 max-sm:border-r-0 items-center justify-center w-[50%] max-sm:w-full max-sm:border-b z-0 lg:min-h-[80vh] max-sm:min-h-[400px]  md:min-h-[80vh] ${
         step === 0 || step === 4 || step === 7 || step === 8
           ? "flex"
           : "max-sm:hidden"
@@ -358,6 +358,7 @@ const ImageEditor = ({
               {/* Main Element */}
               <div
                 role="button"
+                
                 tabIndex={-3}
                 style={{
                   position: "absolute",
@@ -372,8 +373,10 @@ const ImageEditor = ({
                   transformOrigin: "center center",
                   willChange: "transform, width, height",
                   border:
-                    step === 4 ? "2px solid rgba(255, 255, 255, 0.3)" : "none",
-                  borderRadius: "4px",
+                    step === 4 ? "2px solid skyblue" : "none",
+                  scale:"150%",
+                  outline: step === 4 ? "2px solid white" : "none",
+                  zIndex: 50
                 }}
                 onMouseDown={(e) => {
                   e.stopPropagation(),
@@ -393,7 +396,7 @@ const ImageEditor = ({
                   }
                 }}
               >
-                <img src={defaultFaceImage} style={{ width: '100%', height: '100%' }} className="w-full h-auto object-cover" alt="" />
+                <img src={defaultFaceImage}  style={{ width: '100%', height: '100%',zIndex:30,position:"absolute",objectFit:"cover" }} className="w-full absolute z-50 h-full " alt="" />
                 {/* Handles */}
                 {step === 4 && (
                   <>
@@ -408,7 +411,7 @@ const ImageEditor = ({
                         left: -28,
                         width: 24,
                         height: 24,
-                        backgroundColor: "white",
+                        backgroundColor: "#3b82f6",
                         cursor: "move",
                         borderRadius: "50%",
                         boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
@@ -433,7 +436,7 @@ const ImageEditor = ({
                         }
                       }} // Add support for keyboard input
                     >
-                      <IoMove className="text-xl text-blue-500" />
+                      <IoMove className="text-xl text-blue-50" />
                     </div>
 
                     <div
@@ -446,7 +449,7 @@ const ImageEditor = ({
                         right: -28,
                         width: 24,
                         height: 24,
-                        backgroundColor: "white",
+                        backgroundColor: "#3b82f6",
                         cursor: "grab",
                         borderRadius: "50%",
                         boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
@@ -473,7 +476,30 @@ const ImageEditor = ({
                         }
                       }} // Add support for keyboard input
                     >
-                      <FaArrowsRotate className="text-lg text-blue-500" />
+                      <FaArrowsRotate className="text-lg text-blue-50" />
+                    </div>
+                    <div
+                      // Rotate Handle
+                      role="button" // Add a role attribute to indicate that it's a button
+                      tabIndex={0} // Add tabIndex to make it focusable
+                      style={{
+                        position: "absolute",
+                        bottom: -28,
+                        left: -28,
+                        width: 24,
+                        height: 24,
+                        backgroundColor: "white",
+                        cursor: "grab",
+                        borderRadius: "50%",
+                        boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+                        touchAction: "none",
+                        transform: `rotate(${-transform.rotation}deg)`,
+                        border: "2px solid #3b82f6",
+                        transition: "background-color 0.2s, transform 0.3s",
+                      }}
+                      className="flex items-center justify-center"
+                     // Add support for keyboard input
+                    >
                     </div>
                     <div
                       // Resize Handle
@@ -485,7 +511,7 @@ const ImageEditor = ({
                         right: -28,
                         width: 24,
                         height: 24,
-                        backgroundColor: "white",
+                        backgroundColor: "#3b82f6",
                         cursor: "nwse-resize",
                         borderRadius: "4px",
                         boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
@@ -513,7 +539,7 @@ const ImageEditor = ({
                       }}
                     >
                       {" "}
-                      <IoResize className="text-blue-500 text-xl rotate-90" />{" "}
+                      <IoResize className="text-blue-50 text-xl rotate-90" />{" "}
                     </div>
                   </>
                 )}
@@ -521,7 +547,7 @@ const ImageEditor = ({
             </div>
           ) : (
             <img
-              className="top-1 absolute max-h-[450px] z-40 max-sm:scale-90"
+              className="top-10 absolute max-h-[350px] z-40 max-sm:scale-90"
               src={"/images/Layer_40_face_preview.png"}
               alt="face preview"
             />
@@ -535,6 +561,7 @@ const ImageEditor = ({
             className="absolute z-1 h-full "
           />
           <canvas
+          style={{zIndex:50}}
             ref={canvasTransparentRef}
             width={"557px"}
             height={"800px"}
