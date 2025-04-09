@@ -352,7 +352,7 @@ const ImageEditor = ({
                 userSelect: "none",
                 overflow: "hidden",
                 margin: "0 auto",
-                zIndex: 50,
+                zIndex:100,
               }}
             >
               {/* Main Element */}
@@ -376,7 +376,7 @@ const ImageEditor = ({
                     step === 4 ? "2px solid skyblue" : "none",
                   scale:"150%",
                   outline: step === 4 ? "2px solid white" : "none",
-                  zIndex: 50
+                  zIndex:60 
                 }}
                 onMouseDown={(e) => {
                   e.stopPropagation(),
@@ -396,7 +396,7 @@ const ImageEditor = ({
                   }
                 }}
               >
-                <img src={defaultFaceImage}  style={{ width: '100%', height: '100%',zIndex:30,position:"absolute",objectFit:"cover" }} className="w-full absolute z-50 h-full " alt="" />
+                <img src={defaultFaceImage}  style={{ width: '100%', height: '100%',zIndex:30,position:"absolute",objectFit:"cover" }} className="w-full absolute z-40 h-full  object-cover " alt="" />
                 {/* Handles */}
                 {step === 4 && (
                   <>
@@ -455,7 +455,6 @@ const ImageEditor = ({
                         boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
                         touchAction: "none",
                         transform: `rotate(${-transform.rotation}deg)`,
-                        
                         transition: "background-color 0.2s, transform 0.3s",
                       }}
                       className="flex items-center justify-center"

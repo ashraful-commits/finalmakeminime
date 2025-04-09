@@ -147,7 +147,7 @@ function ImagePreview({ croppedImage, setStep, setCropedImage,step,setFaceImage 
               </button>
               <button
                 onClick={handleSave}
-                className="px-8 py-1 bg-blue-500   text-white text-sm rounded hover:bg-blue-800 border flex justify-center items-center gap-2 max-sm:gap-1 "
+                className="px-8 py-2 bg-blue-500   text-white text-sm rounded hover:bg-blue-800 border flex justify-center items-center gap-2 max-sm:gap-1 "
               >
                 <AiOutlineCheck className="inline-block mr-2" />
                 Confirm
