@@ -1,4 +1,4 @@
-import React from "react";
+
 import {
   FaArrowDown,
   FaArrowLeft,
@@ -10,42 +10,60 @@ import {
 } from "react-icons/fa";
 import { FaRotateLeft, FaRotateRight } from "react-icons/fa6";
 
-const Position = ({ setStep, setImagePosition, setRotation, setScale }) => {
+const Position = ({ setStep, setTransform }) => {
+  const rotateRight = () => {
+    setTransform((prev) => ({
+      ...prev,
+      rotation: (prev.rotation + 15) % 360,
+    }));
+  };
+  const rotateLeft = () => {
+    setTransform((prev) => ({
+      ...prev,
+      rotation: (prev.rotation - 15 + 360) % 360,
+    }));
+  };
+  const zoomIn = () => {
+    setTransform((prev) => ({
+      ...prev,
+      zoom: Math.min(prev.zoom + 0.1, 3), 
+    }));
+  };
+
+  const zoomOut = () => {
+    setTransform((prev) => ({
+      ...prev,
+      zoom: Math.max(prev.zoom - 0.1, 1),
+    }));
+  };
+
+  // Function to move div in specific direction
+  const moveUp = () => {
+    setTransform((prev) => ({
+      ...prev,
+      y: Math.max(prev.y - 10, 0), // Prevent moving out of bounds
+    }));
+  };
+
+  const moveDown = () => {
+    setTransform((prev) => ({
+      ...prev,
+      y: prev.y + 10, // You may want to limit maximum movement here
+    }));
+  };
+
   const moveLeft = () => {
-    setImagePosition((prevPos) => ({
-      ...prevPos,
-      x: prevPos.x - 10, // Adjust '10' to control the movement speed
+    setTransform((prev) => ({
+      ...prev,
+      x: Math.max(prev.x - 10, 0), // Prevent moving out of bounds
     }));
   };
 
-  // Move right function
   const moveRight = () => {
-    setImagePosition((prevPos) => ({
-      ...prevPos,
-      x: prevPos.x + 10, // Adjust '10' to control the movement speed
+    setTransform((prev) => ({
+      ...prev,
+      x: prev.x + 10, // You may want to limit maximum movement here
     }));
-  };
-
-  const handleRotate = (direction) => {
-    setRotation((prevRotation) => prevRotation + direction * 5);
-  };
-  const handleMove = (direction) => {
-    switch (direction) {
-      case "up":
-        setImagePosition((prevPos) => ({ ...prevPos, y: prevPos.y - 5 }));
-        break;
-      case "down":
-        setImagePosition((prevPos) => ({ ...prevPos, y: prevPos.y + 5 }));
-        break;
-      case "left":
-        setImagePosition((prevPos) => ({ ...prevPos, x: prevPos.x - 5 }));
-        break;
-      case "right":
-        setImagePosition((prevPos) => ({ ...prevPos, x: prevPos.x + 5 }));
-        break;
-      default:
-        break;
-    }
   };
   const handleConfirm = () => {
     setStep(8);
@@ -61,13 +79,13 @@ const Position = ({ setStep, setImagePosition, setRotation, setScale }) => {
           <span className="text-blue-500">Rotate</span>
           <div className="flex gap-2 justify-center items-center">
             <button
-              onClick={() => handleRotate(1)}
+              onClick={rotateRight }
               className="text-gray-600  px-2 py-1 text-xl rounded-md  flex items-center gap-2 max-sm:flex-col max-sm:scale-75 scale-110  "
             >
               <FaRotateRight className="inline-block text-xl font-light" />
             </button>
             <button
-              onClick={() => handleRotate(-1)}
+              onClick={rotateLeft}
               className="text-gray-600  px-2 py-1 text-xl rounded-md  flex items-center gap-2  max-sm:flex-col max-sm:scale-75 scale-110 "
             >
               <FaRotateLeft className="inline-block text-xl font-light" />
@@ -78,25 +96,25 @@ const Position = ({ setStep, setImagePosition, setRotation, setScale }) => {
           <span className="text-blue-500">Move</span>
           <div className="flex gap-1 justify-center items-center">
             <button
-              onClick={() => handleMove("up")}
+              onClick={ moveUp}
               className="text-gray-600  px-2 py-1 text-xl rounded-md hover:text-gray-700 flex items-center gap-2  max-sm:flex-col max-sm:scale-75 scale-110 "
             >
               <FaArrowUp className="inline-block text-xl font-light" />
             </button>
             <button
-              onClick={() => handleMove("down")}
-              className="text-gray-600  px-2 py-1 text-xl rounded-md hover:bg-gray-700 flex items-center gap-2  max-sm:flex-col max-sm:scale-75 scale-110 "
+              onClick={ moveDown}
+              className="text-gray-600  px-2 py-1 text-xl rounded-md  flex items-center gap-2  max-sm:flex-col max-sm:scale-75 scale-110 "
             >
               <FaArrowDown className="inline-block text-xl font-light" />
             </button>
             <button
-              onClick={() => moveLeft("left")}
+              onClick={moveLeft}
               className="text-gray-600  px-2 py-1 text-xl rounded-md hover:text-gray-700 flex items-center gap-2  max-sm:flex-col max-sm:scale-75 scale-110 "
             >
               <FaArrowLeft className="inline-block text-xl font-light" />
             </button>
             <button
-              onClick={() => moveRight("right")}
+              onClick={moveRight}
               className="text-gray-600 px-2 py-1 text-xl rounded-md hover:text-gray-700 flex items-center gap-2  max-sm:flex-col max-sm:scale-75 scale-110 "
             >
               <FaArrowRight className="inline-block text-xl font-light" />
@@ -108,15 +126,13 @@ const Position = ({ setStep, setImagePosition, setRotation, setScale }) => {
           <span className="text-blue-500">Zoom</span>
           <div className="flex">
             <button
-              onClick={() => setScale((prevScale) => prevScale + 0.01)}
+              onClick={zoomIn}
               className=" text-gray-500 px-2 py-1 text-xl rounded-md hover:text-gray-700 flex items-center gap-2 max-sm:flex-col max-sm:scale-75"
             >
               <FaPlus className="inline-block text-xl font-light" />
             </button>
             <button
-              onClick={() =>
-                setScale((prevScale) => Math.max(prevScale - 0.1, 0.1))
-              }
+              onClick={zoomOut}
               className=" text-gray-500 px-2 py-1 text-xl rounded-md hover:text-gray-700 flex items-center gap-2 max-sm:flex-col max-sm:scale-75"
             >
               <FaMinus className="inline-block text-xl font-light" />

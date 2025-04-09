@@ -8,6 +8,8 @@ const MoveableDiv = ({ step }: { step: number }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [activeHandle, setActiveHandle] = useState<HandleType | null>(null);
+
+  // Extend the state to include zoom and position
   const [transform, setTransform] = useState({
     x: 100,
     y: 100,
@@ -15,9 +17,9 @@ const MoveableDiv = ({ step }: { step: number }) => {
     height: 200,
     rotation: 0,
     aspectRatio: 1,
+    zoom: 1,
   });
 
-  // Store initial positions and dimensions
   const startValues = useRef({
     x: 0,
     y: 0,
@@ -27,12 +29,10 @@ const MoveableDiv = ({ step }: { step: number }) => {
     clientY: 0,
   });
 
-  // Get container bounds with memoization
   const getContainerBounds = useCallback(() => {
     return containerRef.current?.getBoundingClientRect() || new DOMRect();
   }, []);
 
-  // Unified input handler with proper touch support
   const handleStart = useCallback(
     (type: HandleType, clientX: number, clientY: number) => {
       if (step === 5) return;
@@ -53,7 +53,6 @@ const MoveableDiv = ({ step }: { step: number }) => {
       setActiveHandle(type);
       setIsDragging(true);
 
-      // Maintain aspect ratio for resize
       if (type === "resize") {
         setTransform((prev) => ({
           ...prev,
@@ -64,7 +63,6 @@ const MoveableDiv = ({ step }: { step: number }) => {
     [getContainerBounds, step, transform]
   );
 
-  // Smooth movement handler using requestAnimationFrame
   const handleMove = useCallback(
     (clientX: number, clientY: number) => {
       if (!isDragging || !containerRef.current) return;
@@ -99,8 +97,7 @@ const MoveableDiv = ({ step }: { step: number }) => {
           case "rotate": {
             const centerX = transform.x + transform.width / 2;
             const centerY = transform.y + transform.height / 2;
-            const angle =
-              Math.atan2(y - centerY, x - centerX) * (180 / Math.PI);
+            const angle = Math.atan2(y - centerY, x - centerX) * (180 / Math.PI);
             setTransform((prev) => ({
               ...prev,
               rotation: (angle + 360) % 360,
@@ -115,7 +112,6 @@ const MoveableDiv = ({ step }: { step: number }) => {
     [activeHandle, isDragging, transform.aspectRatio, transform.x, transform.y, getContainerBounds]
   );
 
-  // Event handlers with proper passive listeners
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => handleMove(e.clientX, e.clientY);
     const handleTouchMove = (e: TouchEvent) => {
@@ -158,6 +154,63 @@ const MoveableDiv = ({ step }: { step: number }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, [getContainerBounds]);
 
+  const rotateLeft = () => {
+    setTransform((prev) => ({
+      ...prev,
+      rotation: (prev.rotation - 15 + 360) % 360,
+    }));
+  };
+
+  const rotateRight = () => {
+    setTransform((prev) => ({
+      ...prev,
+      rotation: (prev.rotation + 15) % 360,
+    }));
+  };
+
+  const zoomIn = () => {
+    setTransform((prev) => ({
+      ...prev,
+      zoom: Math.min(prev.zoom + 0.1, 3), // For example, limit max zoom to 3x
+    }));
+  };
+
+  const zoomOut = () => {
+    setTransform((prev) => ({
+      ...prev,
+      zoom: Math.max(prev.zoom - 0.1, 1), // For example, minimum zoom is 1x
+    }));
+  };
+
+  // Function to move div in specific direction
+  const moveUp = () => {
+    setTransform((prev) => ({
+      ...prev,
+      y: Math.max(prev.y - 10, 0), // Prevent moving out of bounds
+    }));
+  };
+
+  const moveDown = () => {
+    setTransform((prev) => ({
+      ...prev,
+      y: prev.y + 10, // You may want to limit maximum movement here
+    }));
+  };
+
+  const moveLeft = () => {
+    setTransform((prev) => ({
+      ...prev,
+      x: Math.max(prev.x - 10, 0), // Prevent moving out of bounds
+    }));
+  };
+
+  const moveRight = () => {
+    setTransform((prev) => ({
+      ...prev,
+      x: prev.x + 10, // You may want to limit maximum movement here
+    }));
+  };
+
   return (
     <div
       ref={containerRef}
@@ -173,7 +226,6 @@ const MoveableDiv = ({ step }: { step: number }) => {
         margin: "0 auto",
       }}
     >
-      {/* Main Element */}
       <div
         role="button"
         tabIndex={-5}
@@ -181,8 +233,8 @@ const MoveableDiv = ({ step }: { step: number }) => {
           position: "absolute",
           left: transform.x,
           top: transform.y,
-          width: transform.width,
-          height: transform.height,
+          width: transform.width * transform.zoom,
+          height: transform.height * transform.zoom,
           backgroundColor: "rgba(100, 150, 250, 0.8)",
           transform: `rotate(${transform.rotation}deg)`,
           transition: isDragging
@@ -193,22 +245,20 @@ const MoveableDiv = ({ step }: { step: number }) => {
           border: "2px solid rgba(255, 255, 255, 0.3)",
           borderRadius: "4px",
         }}
-        className="cusror-move"
-        onMouseDown={(e) => {e.stopPropagation(), handleStart("move", e.clientX, e.clientY)}}
-        onTouchStart={(e) =>
-          {e.stopPropagation(),handleStart("move", e.touches[0].clientX, e.touches[0].clientY)}
-        }
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            handleStart("move", e.clientX, e.clientY);
-          }
+        onMouseDown={(e) => {
+          e.stopPropagation();
+          handleStart("move", e.clientX, e.clientY);
+        }}
+        onTouchStart={(e) => {
+          e.stopPropagation();
+          handleStart("move", e.touches[0].clientX, e.touches[0].clientY);
         }}
       >
-        <img src="/images/IMG_9931_1800x1800.jpg" alt="" />
-        
+        <img src="/images/IMG_9931_1800x1800.jpg" alt="" style={{ width: "100%", height: "100%", borderRadius: "4px" }} />
+
         {/* Handles */}
+        {/* Move Handle */}
         <div
-          // Move Handle
           role="button"
           tabIndex={0}
           style={{
@@ -223,21 +273,20 @@ const MoveableDiv = ({ step }: { step: number }) => {
             touchAction: "none",
             transition: "background-color 0.2s",
           }}
-          onMouseDown={(e) => {e.stopPropagation(),handleStart("move", e.clientX, e.clientY)}}
-          onTouchStart={(e) =>
-          { e.stopPropagation(), handleStart("move", e.touches[0].clientX, e.touches[0].clientY)}
-          }
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              handleStart("move", e.clientX, e.clientY);
-            }
+          onMouseDown={(e) => {
+            e.stopPropagation();
+            handleStart("move", e.clientX, e.clientY);
+          }}
+          onTouchStart={(e) => {
+            e.stopPropagation();
+            handleStart("move", e.touches[0].clientX, e.touches[0].clientY);
           }}
         >
           <IoMove className="text-xl text-blue-500" />
         </div>
 
+        {/* Rotate Handle */}
         <div
-          // Rotate Handle
           role="button"
           tabIndex={0}
           style={{
@@ -254,21 +303,20 @@ const MoveableDiv = ({ step }: { step: number }) => {
             transition: "background-color 0.2s, transform 0.3s",
           }}
           className="flex items-center justify-center"
-          onMouseDown={(e) => handleStart("rotate", e.clientX, e.clientY)}
-          onTouchStart={(e) =>
-           { e.stopPropagation(),handleStart("rotate", e.touches[0].clientX, e.touches[0].clientY)}
-          }
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              handleStart("rotate", e.clientX, e.clientY);
-            }
+          onMouseDown={(e) => {
+            e.stopPropagation();
+            handleStart("rotate", e.clientX, e.clientY);
+          }}
+          onTouchStart={(e) => {
+            e.stopPropagation();
+            handleStart("rotate", e.touches[0].clientX, e.touches[0].clientY);
           }}
         >
           <FaArrowsRotate className="text-lg text-blue-500" />
         </div>
 
+        {/* Resize Handle */}
         <div
-          // Resize Handle
           role="button"
           tabIndex={0}
           style={{
@@ -283,18 +331,37 @@ const MoveableDiv = ({ step }: { step: number }) => {
             touchAction: "none",
             transition: "background-color 0.2s",
           }}
-          onMouseDown={(e) => {e.stopPropagation(),handleStart("resize", e.clientX, e.clientY)}}
-          onTouchStart={(e) => {e.stopPropagation(),
-            handleStart("resize", e.touches[0].clientX, e.touches[0].clientY)}
-          }
-          className="flex justify-center items-center "
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              handleStart("resize", e.clientX, e.clientY);
-            }
+          onMouseDown={(e) => {
+            e.stopPropagation();
+            handleStart("resize", e.clientX, e.clientY);
           }}
+          onTouchStart={(e) => {
+            e.stopPropagation();
+            handleStart("resize", e.touches[0].clientX, e.touches[0].clientY);
+          }}
+          className="flex justify-center items-center"
         > 
           <IoResize className="text-blue-500 text-xl rotate-90"/> 
+        </div>
+      </div>
+
+      {/* Control Buttons */}
+      <div style={{ display: "flex", justifyContent: "space-evenly", marginTop: "10px" }}>
+        <button onClick={rotateLeft}>Rotate Left</button>
+        <button onClick={rotateRight}>Rotate Right</button>
+        <button onClick={zoomIn}>Zoom In</button>
+        <button onClick={zoomOut}>Zoom Out</button>
+      </div>
+
+      {/* Move Buttons */}
+      <div style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
+        <div>
+          <button onClick={moveUp}>Move Up</button>
+        </div>
+        <div>
+          <button onClick={moveLeft}>Move Left</button>
+          <button onClick={moveDown}>Move Down</button>
+          <button onClick={moveRight}>Move Right</button>
         </div>
       </div>
     </div>

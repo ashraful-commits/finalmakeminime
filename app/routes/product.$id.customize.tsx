@@ -175,6 +175,15 @@ export default function ProductIdCustomize() {
   const [rotation, setRotation] = useState<number>(0);
   const [scale, setScale] = useState(0.7);
   const [step, setStep] = useState<number>(0);
+  const [transform, setTransform] = useState({
+    x: 100,
+    y: 100,
+    width: 200,
+    height: 200,
+    rotation: 0,
+    aspectRatio: 1,
+    zoom: 1,
+  });
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -356,6 +365,8 @@ export default function ProductIdCustomize() {
               setRotation={setRotation}
               setScale={setScale}
               scale={scale}
+              transform={transform}
+              setTransform={setTransform}
             />
 
             {/* Right Section - Upload/Take Photo */}
@@ -511,6 +522,8 @@ export default function ProductIdCustomize() {
                 rotation={rotation}
                 setRotation={setRotation}
                 setScale={setScale}
+                transform={transform}
+                setTransform={setTransform}
               />
             )}
           </div>

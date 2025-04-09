@@ -24,6 +24,8 @@ interface ImageEditorProps {
   setScale: React.Dispatch<React.SetStateAction<number>>;
   scale: number;
   setRotation: React.Dispatch<React.SetStateAction<number>>;
+  transform: string;
+  setTransform: React.Dispatch<React.SetStateAction<string>>;
 }
 const ImageEditor = ({
   faceImage,
@@ -33,11 +35,8 @@ const ImageEditor = ({
   step,
   productId,
   skinToneImage,
-  rotation,
-  imagePosition,
-  setScale,
-  scale,
-  setImagePosition,
+  transform,
+  setTransform,
 }: ImageEditorProps) => {
   // Refs
   const canvasBodyRef = useRef(null);
@@ -58,7 +57,6 @@ const ImageEditor = ({
   const defaultSkinTone = skinTone || "grayscale(100%)";
 
   const [isDragging, setIsDragging] = useState(false);
-  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [loading, setLoading] = useState(false);
 
   const drawImageOnCanvas = (canvasRef, imageSrc, filter = "none") => {
@@ -109,16 +107,7 @@ const ImageEditor = ({
     defaultHeadBackImage,
   ]);
 
-
   const [activeHandle, setActiveHandle] = useState<HandleType | null>(null);
-  const [transform, setTransform] = useState({
-    x: 100,
-    y: 100,
-    width: 200,
-    height: 200,
-    rotation: 0,
-    aspectRatio: 1,
-  });
 
   // Store initial positions and dimensions
   const startValues = useRef({
@@ -164,7 +153,7 @@ const ImageEditor = ({
         }));
       }
     },
-    [getContainerBounds, step, transform]
+    [getContainerBounds, step, transform, setTransform]
   );
 
   // Smooth movement handler using requestAnimationFrame
@@ -221,7 +210,9 @@ const ImageEditor = ({
       transform.aspectRatio,
       transform.x,
       transform.y,
-      getContainerBounds,transform.height,transform.width
+      getContainerBounds,
+      transform.height,
+      transform.width,
     ]
   );
 
@@ -251,7 +242,7 @@ const ImageEditor = ({
       window.removeEventListener("mouseup", handleEnd);
       window.removeEventListener("touchend", handleEnd);
     };
-  }, [isDragging, handleMove,setIsDragging]);
+  }, [isDragging, handleMove, setIsDragging]);
 
   // Responsive container sizing
   useEffect(() => {
@@ -355,160 +346,177 @@ const ImageEditor = ({
                 position: "relative",
                 width: "100%",
                 maxWidth: "557px",
-                height: "80vh",
+                height: "800px",
                 maxHeight: "800px",
                 touchAction: "none",
                 userSelect: "none",
                 overflow: "hidden",
                 margin: "0 auto",
-                zIndex:50
+                zIndex: 50,
               }}
             >
               {/* Main Element */}
               <div
-              role="button"
-              tabIndex={-3}
+                role="button"
+                tabIndex={-3}
                 style={{
                   position: "absolute",
                   left: transform.x,
                   top: transform.y,
-                  width: transform.width,
-                  height: transform.height,
+                  width: transform.width * transform.zoom,
+                  height: transform.height * transform.zoom,
                   transform: `rotate(${transform.rotation}deg)`,
                   transition: isDragging
                     ? "none"
                     : "all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28)",
                   transformOrigin: "center center",
                   willChange: "transform, width, height",
-                  border: "2px solid rgba(255, 255, 255, 0.3)",
+                  border:
+                    step === 4 ? "2px solid rgba(255, 255, 255, 0.3)" : "none",
                   borderRadius: "4px",
                 }}
-                onMouseDown={(e) =>{ e.stopPropagation(),handleStart("move", e.clientX, e.clientY)}}
-                  onTouchStart={(e) =>
-                    {e.stopPropagation(),handleStart(
+                onMouseDown={(e) => {
+                  e.stopPropagation(),
+                    handleStart("move", e.clientX, e.clientY);
+                }}
+                onTouchStart={(e) => {
+                  e.stopPropagation(),
+                    handleStart(
                       "move",
                       e.touches[0].clientX,
                       e.touches[0].clientY
-                    )}
+                    );
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    handleStart("move", e.clientX, e.clientY);
                   }
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      handleStart("move", e.clientX, e.clientY);
-                    }
-                  }} 
+                }}
               >
-                <img src={defaultFaceImage} alt="" />
+                <img src={defaultFaceImage} style={{ width: '100%', height: '100%' }} className="w-full h-auto object-cover" alt="" />
                 {/* Handles */}
-                <div
-                  // Move Handle
-                  className="flex justify-center items-center"
-                  role="button" // Add a role attribute to indicate that it's a interactive element
-                  tabIndex={0} // Add tabIndex to make it focusable
-                  style={{
-                    position: "absolute",
-                    top: -28,
-                    left: -28,
-                    width: 24,
-                    height: 24,
-                    backgroundColor:"white",
-                    cursor: "move",
-                    borderRadius: "50%",
-                    boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-                    touchAction: "none",
-                    transition: "background-color 0.2s",
-                  }}
-                  onMouseDown={(e) => {e.stopPropagation(), handleStart("move", e.clientX, e.clientY)}}
-                  onTouchStart={(e) =>{e.stopPropagation(),
-                    handleStart(
-                      "move",
-                      e.touches[0].clientX,
-                      e.touches[0].clientY
-                    )}
-                  }
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      handleStart("move", e.clientX, e.clientY);
-                    }
-                  }} // Add support for keyboard input
-                >
-                  <IoMove className="text-xl text-blue-500" />
-                </div>
+                {step === 4 && (
+                  <>
+                    <div
+                      // Move Handle
+                      className="flex justify-center items-center"
+                      role="button" // Add a role attribute to indicate that it's a interactive element
+                      tabIndex={0} // Add tabIndex to make it focusable
+                      style={{
+                        position: "absolute",
+                        top: -28,
+                        left: -28,
+                        width: 24,
+                        height: 24,
+                        backgroundColor: "white",
+                        cursor: "move",
+                        borderRadius: "50%",
+                        boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+                        touchAction: "none",
+                        transition: "background-color 0.2s",
+                      }}
+                      onMouseDown={(e) => {
+                        e.stopPropagation(),
+                          handleStart("move", e.clientX, e.clientY);
+                      }}
+                      onTouchStart={(e) => {
+                        e.stopPropagation(),
+                          handleStart(
+                            "move",
+                            e.touches[0].clientX,
+                            e.touches[0].clientY
+                          );
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          handleStart("move", e.clientX, e.clientY);
+                        }
+                      }} // Add support for keyboard input
+                    >
+                      <IoMove className="text-xl text-blue-500" />
+                    </div>
 
-                <div
-                  // Rotate Handle
-                  role="button" // Add a role attribute to indicate that it's a button
-                  tabIndex={0} // Add tabIndex to make it focusable
-                  style={{
-                    position: "absolute",
-                    top: -28,
-                    right: -28,
-                    width: 24,
-                    height: 24,
-                    backgroundColor:"white",
-                    cursor: "grab",
-                    borderRadius: "50%",
-                    boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-                    touchAction: "none",
-                    transform: `rotate(${-transform.rotation}deg)`,
-                    transition: "background-color 0.2s, transform 0.3s",
-                  }}
-                  className="flex items-center justify-center"
-                  onMouseDown={(e) =>
-                    {e.stopPropagation(),handleStart("rotate", e.clientX, e.clientY)}
-                  }
-                  onTouchStart={(e) =>
-                    handleStart(
-                      "rotate",
-                      e.touches[0].clientX,
-                      e.touches[0].clientY
-                    )
-                  }
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      handleStart("rotate", e.clientX, e.clientY);
-                    }
-                  }} // Add support for keyboard input
-                >
-                  <FaArrowsRotate className="text-lg text-blue-500" />
-                </div>
-                <div
-                  // Resize Handle
-                  role="button" // Add a role attribute to indicate that it's a button
-                  tabIndex={0} // Add tabIndex to make it focusable
-                  style={{
-                    position: "absolute",
-                    bottom: -28,
-                    right: -28,
-                    width: 24,
-                    height: 24,
-                    backgroundColor:"white",
-                    cursor: "nwse-resize",
-                    borderRadius: "4px",
-                    boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
-                    touchAction: "none",
-                    transition: "background-color 0.2s",
-                  }}
-                  onMouseDown={(e) =>{e.stopPropagation(),
-                    handleStart("resize", e.clientX, e.clientY)}
-                  }
-                  onTouchStart={(e) => {e.stopPropagation(),
-                    handleStart(
-                      "resize",
-                      e.touches[0].clientX,
-                      e.touches[0].clientY
-                    )}
-                  }
-                  className="flex justify-center items-center "
-                  onKeyDown={(e) => {
-                    // Add support for keyboard input
-                    if (e.key === "Enter" || e.key === " ") {
-                      handleStart("resize", e.clientX, e.clientY);
-                    }
-                  }}
-                >
-                  {" "}
-                  <IoResize className="text-blue-500 text-xl rotate-90" />{" "}
-                </div>
+                    <div
+                      // Rotate Handle
+                      role="button" // Add a role attribute to indicate that it's a button
+                      tabIndex={0} // Add tabIndex to make it focusable
+                      style={{
+                        position: "absolute",
+                        top: -28,
+                        right: -28,
+                        width: 24,
+                        height: 24,
+                        backgroundColor: "white",
+                        cursor: "grab",
+                        borderRadius: "50%",
+                        boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+                        touchAction: "none",
+                        transform: `rotate(${-transform.rotation}deg)`,
+                        
+                        transition: "background-color 0.2s, transform 0.3s",
+                      }}
+                      className="flex items-center justify-center"
+                      onMouseDown={(e) => {
+                        e.stopPropagation(),
+                          handleStart("rotate", e.clientX, e.clientY);
+                      }}
+                      onTouchStart={(e) =>
+                        handleStart(
+                          "rotate",
+                          e.touches[0].clientX,
+                          e.touches[0].clientY
+                        )
+                      }
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          handleStart("rotate", e.clientX, e.clientY);
+                        }
+                      }} // Add support for keyboard input
+                    >
+                      <FaArrowsRotate className="text-lg text-blue-500" />
+                    </div>
+                    <div
+                      // Resize Handle
+                      role="button" // Add a role attribute to indicate that it's a button
+                      tabIndex={0} // Add tabIndex to make it focusable
+                      style={{
+                        position: "absolute",
+                        bottom: -28,
+                        right: -28,
+                        width: 24,
+                        height: 24,
+                        backgroundColor: "white",
+                        cursor: "nwse-resize",
+                        borderRadius: "4px",
+                        boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+                        touchAction: "none",
+                        transition: "background-color 0.2s",
+                      }}
+                      onMouseDown={(e) => {
+                        e.stopPropagation(),
+                          handleStart("resize", e.clientX, e.clientY);
+                      }}
+                      onTouchStart={(e) => {
+                        e.stopPropagation(),
+                          handleStart(
+                            "resize",
+                            e.touches[0].clientX,
+                            e.touches[0].clientY
+                          );
+                      }}
+                      className="flex justify-center items-center "
+                      onKeyDown={(e) => {
+                        // Add support for keyboard input
+                        if (e.key === "Enter" || e.key === " ") {
+                          handleStart("resize", e.clientX, e.clientY);
+                        }
+                      }}
+                    >
+                      {" "}
+                      <IoResize className="text-blue-500 text-xl rotate-90" />{" "}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           ) : (
@@ -562,6 +570,5 @@ const ImageEditor = ({
     </div>
   );
 };
-
 
 export default ImageEditor;
