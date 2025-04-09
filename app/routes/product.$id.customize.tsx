@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { IoIosArrowBack, IoIosCloseCircleOutline } from "react-icons/io";
+import { IoIosArrowBack } from "react-icons/io";
 
 import FaceCutterApp from "~/components/FaceCutterApp";
 import { IoClose } from "react-icons/io5";
@@ -24,8 +24,6 @@ import { json } from "@remix-run/node";
 import { Buffer } from "buffer";
 import SkinTone from "~/components/SkinTone";
 import Position from "~/components/Position";
-import { FaX } from "react-icons/fa6";
-import MoveableScalableCanvas from "~/components/MoveableCanvas";
 
 // Type for product meta data
 interface ProductMetaData {
@@ -294,7 +292,7 @@ export default function ProductIdCustomize() {
   }, [unsavedChanges]);
   console.log(step);
   return (
-    <div className="h-screen w-[100vw] text-black min-h-[80vh] relative max-sm:h-[97vh]">
+    <div className="h-screen w-[100vw] max-sm:sticky top-0 left-0 text-black min-h-[80vh] relative max-sm:h-[97vh]">
       {/* Exit Link */}
       {loading ? (
         <div className="loader w-full h-screen flex gap-3 flex-col justify-center items-center">
@@ -518,7 +516,6 @@ export default function ProductIdCustomize() {
           </div>
         </>
       )}
-      <MoveableScalableCanvas/>
     </div>
   );
 }

@@ -2,25 +2,27 @@ import React, { useRef, useState, useEffect, useCallback } from 'react';
 
 type HandleType = 'move' | 'resize' | 'rotate';
 
-const MoveableScalableCanvas = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [activeHandle, setActiveHandle] = useState<HandleType | null>(null);
-  const [startPos, setStartPos] = useState({ x: 0, y: 0 });
-  const [rotation, setRotation] = useState(0);
-  const [aspectRatio] = useState(200 / 200); // Initial aspect ratio
-
-  const [rect, setRect] = useState({
-    x: 100,
-    y: 100,
-    width: 200,
-    height: 200,
-  });
+const MoveableScalableCanvas = ({step}) => {
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const [isDragging, setIsDragging] = useState(false);
+    const [activeHandle, setActiveHandle] = useState<HandleType | null>(null);
+    const [startPos, setStartPos] = useState({ x: 0, y: 0 });
+    const [rotation, setRotation] = useState(0);
+    const [aspectRatio] = useState(200 / 200);
+  
+    const [rect, setRect] = useState({
+      x: 100,
+      y: 100,
+      width: 200,
+      height: 200,
+    });
 
   const icons = {
-    move: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNDAiIGhlaWdodD0iMjQwIiB2aWV3Qm94PSIwIDAgMjQwIDI0MCI+PHBhdGggZmlsbD0iIzk5OUZGNCIgZD0iTTAgTWlSRnMuMzAyMYyAxcyw0IDgwIDEuOSIQyWZsW0JhLTV0ODMuMzYxMGQgMzctMkg0YzkuMjAyNTIgMTkuNzAgMjUuMDQ4LDEuMTc3IChjMQlsZ2twNzI45VVbTQyIDUuMmM2LTYuNDIgLDAsOXVsIHg4di02cHwgLGUwJGMsOC4wMTAxZ2YlMioyLTAuMTkvMTkwOyInZnMsMjcuMzA4MTQ4YDUgNHcgPlRleHQgSACsMC4yNjM5Mi46LGE3ODk1LDM1Ljc0IHRlbCwzLjhtPS0xMCkvcGFytICNjLTI1IDE5LnRpIDMwMTAxMiAwINGTON MAwOGVTYSxkeCzgY2QxLDU7ODIwIE5IbG09M2xXNGMtaGFuZzAwMTA3MywzY2IgTENzoTE2Yy44MTEuMTBzLDQ2OSwxMDsyLjI1MiwwMTEuYzkwMC44NDEU7dmEzMjMuMjI5OTU+Ljk3aXJhMyY/zESNDB5IDFDOSm8ZFXMWRlIDA0Qll0djNdIglzbG9yZTc3NzAydCToYnRjaGxueHRsbCw2cy0xMGFocHl0Jy4xdW50IC8gNy01ZTAzNjExbE0xcDQwQlhkSXA6X1AWYuYAYOHRkOVM3IDI1LjxEODkmMDA3WmNxLDEgMDFZywEMDquybXgGHA6MWgjMC4drsiIj+sLTYwLTk4djZkbnIuYjBsM0UzLjN0YWI1MDcyczIyZSs0eXEkwcHguzHiM2H1CRUBIQ2M9OCwkMiwyYy41aIIbSBxZTgxNzA4azMuWjk7pmh35IyOTBQUjAsOHItZjMuNTVzVE6jMTdVXDR0IC0wLTM4ZW0uIGk0NTQydhw6ZSwgYjc7MjBtMjAtM2MgYzw4MTA2NEkgKGFeemkuMTA4MTA1NQdTE2dUO08IHZpIHR5Qll/OnTQ1dDF1bnUtdHVEiaEBIMyMG9tRVNmNzUubAIAZnJjaCk5NGUuM0MtNDVDNTBlYWYwMCY7Y3AAaTAga2U2MDI0Zm0yLTE2OGFsYnl0JSwsMZcTc3UsMTFvhOBiMSc3IiY3LTVjMyw3OzM2NTc0Y6Q1TXg7aDBDNC8xJGIXPGFydGVyYXmhJnpfaDBJBmksNjc5NWksMzvM2ZjUwNWY0MSw0Wml4IE0zOSZPY2gxLDFhdDAyMHM2ZDQwMC9NY2h0NEFmUkM1WiJjKiMiMjUwLgI7ZFk3QU4tPHgjY0RRWElMbmNtJCw5KDE5IGZfZXkgIiw3k5yZyBsZ2wgbm5Xbnp0aXJ3LCRWbCwgPC91LFl938uK1gYEFTRxGHZz1mMzNqIjUgYzAwMi1BRSddU0VSdy03YKgtMC45Ii4/UM5MaC44MnJpdGUFjJtuD2s9ISc4MliYyBzSUI2YTAyNC0nR0UgZWIzZWZiODFkNzBELGghOmg3Nzl0aHRFbmVzcFlsQqlGUaBRZTBDNgItViYgMzI4ZXxzeWUw4NLg3fGNhfGIby71jM2RoZiAzazAzIg4yNzQbV0khOD03bHhubS4yNCp0IE5EO3M0LTg3NiA4YTA5yAgIDc9Mw==',
-    resize: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNDAiIGhlaWdodD0iMjQwIiB2aWV3Qm94PSIwIDAgMjQwIDI0MCI+PHBhdGggZD0iTTUuNzUxIDMuNzI5YzE4LjMgMTguMzktni42MjggMjMuMjU1LDUuMDA5bDEuMDQgMTdmNjIgOS4wNCA0MS8yODEyfTd2MC40MDUgMTIuNzkwNfMyLjU2MyAuMTM1Yy0xMC4zMTcuNzIzLS45MDgiIEuMDE0OCI6IEJpLjY3OSA4LjU0IDI5LjY4LS41MmQzIDEuMDU5LTIuNzc0LTguMjA5IDEuMjU2LS4yNTUtMS83LjU5MjU1MS51N2IuMTQ3NTAxMS43MjZQUmY4dDlYmljP6ZHJncm80LjQ0YTY0YzUuNiAyMy42ZDcuNDAzIFdlVi40b00TbTEyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHRyYW5zZm9ybT0iNDAuMSkiIHZlcnNpb249IjEu1MDYxICErasLCGV0dWV0VEPcNXY3OS48M3k5bnciID4+PC9zdmc+',
-    rotate: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNDAiIGhlaWdodD0iMjQwIiB2aWV3Qm94PSIwIDAgMjQwIDI0MCI+PHBhdGggZD0iTTAgMzcuNTJoMUGxJ2lvcywsIy4xOCwxMTU4Njc2NTcuNzUuODAyNSw1Ljc3NC04LjUwOS42OTMyMTUxOTAxYzAtMTQuNTk5LTkuNjA1Njg4OC0yOCwxMDA5MDkwNC4zNDZDN1k5MDIuMTQ2NzUiaTYuOTgxMi44NTUtLjU2MSw1MTQiIDcuNDYxeDY0LC42NzM1IDEuMSAyNSAYjAuMyAwLjc5MCwwIDMuMjM4djIuMyA5M2MuNS4xMzMuMzI1Ny40NDk1bC4zNTUgZC5NBAzxYS4BOjAwOC45MzgyMDM1ZDksLkC3YWc3dHk5ZXIuMTgxMyAyLjE5eHkyICg1MC4wNzAwMCw1NTouMiA8MSAmIjApIC8+PC9zdmc+',
+    move: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48cGF0aCBkPSJNMTMgNnYzaC0ydi0zSDl2M0g3VjRINHYyaDN2M0g0djJoM3YzaDJ2LTNoM3YzaDJ2LTNoM3YtMkgxNVY5aC0yVjZ6bS0yIDhIN1Y5aDR2NXptNiAwdi01aDR2NXoiIGZpbGw9IiM0NDQiLz48L3N2Zz4=',
+    resize: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADQAAAA8CAMAAAAe9Wm0AAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAFRQTFRFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFOB9uAAAABx0Uk5TABCf/9+/j38/MM8gcG/AQOCAkO/wUGCgr9CwX4KbFhwAAAGoSURBVHiczZbdksIgDIVBZJVai7CtVff933PVkvBjA+nFzuy5UqefDTmHTIRYJMVWyZ1Saq+/DkfDZzoV9WZPbahXn+r04VxlhxVokaaPSkNqT0I0o5T9M+hSQFQvbPpQL4x1fgDWUS/KIKznxXqyuAL65gWq8LZjQS6UPwbKb4DsBO+6MqAZOuDgWIyshxSZmKeu3Yzw6POTBHtuTahDSBg4FmkqSEVIXEuP69CwfJmhGY3Lm0HizvLY5NAJPN7VIFvkAKNY89iW/eJ4/AGJR6D2tMfmo8fosaZf9U7EPfsfaEbp8Y/W5/DH/jLOeSXo8ZT9vKt31a95bDDZhNDjpIS+ZYVc8ditlZxpxWO44jQU5w2eYW5D6DEOtXBbq/mX0AydQzUm8TiEueNAAofa0jDFgqLHJkJDC8qHGhdKPbZcKA61fuXikUKP7QYoDjW3AUKPs/a3hEOtEb3plm5XEwuCIfbcrt4bkkshIq9SFUq3NCpFtoQUAzI1ZqT6UFnL6BRJP5LQg4KeOtk+bkipGPtCtl29dG8zyE5uHl4l++2rOGOJ/g/6BdWfFz5S5aSmAAAAAElFTkSuQmCC',
+    rotate: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEQAAABACAMAAACUXCGWAAAAAXNSR0IB2cksfwAAAAlwSFlzAAALEwAACxMBAJqcGAAAAI1QTFRFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA6ocz+AAAAC90Uk5TAD9vf18wTxCPv//LIPCf8vmvQPyg42DA+9WAUP3Q+tL3w3Cw8+Hv8ZC05+X19qWzD6QRAAACaElEQVR4nO2Xa3eiMBCGq4jolIWagGCgxYJtbe3u//95SxLuTC4cP3XPvl88ZsLDZDKZDA8P//VjtVqt1s5m5U7Ht87aswJsdnvo9Ljb+L2JG37NyDO5QQhPMFD957BtjIQP0MiE2I8JUhRiR5iP4m+iRfgBpHOE1InUE5gZkoW5CgE1fedZQHbjp56TJDkBvPSYwjdBvKKdfIbXkrQ7QljVLZGGlR7iFbR1uyKTSLFLF2AtpGVQiHzEzNrntZCDnJS+KRLJLcwQ1pgjdUpHJojbMvDntw7XuwHSBETBGBwkDaSUMVUwyJSBQz5ETGNFPOwg8lQBQUxcrhXkJBxRn+9olCQ4pHmTptIco2Sk63zKlReQs75GGCVWA9ldDE+u5j5HiO442IrxapGy+yCJNkkQeWtnVi2WQtywrltHFGLvyCdffjgZfFwIQVNzqScSMjmsEoIVVlQumlbRssASFMLooqyXdeMLG81NF32niGIJLhd5s4Xc+Gw6S/CbqZwM5Suq4JVnD0UKDSaW4hmRieGLVSfmiVuZVnNLCNbnuLkpkb1k1q74sj2IlT7mn2bIq4zI9AwPnSxNDHlToo7UroiowLdhmzNQRmRgvmgp7reYpO5iI7FYGmrOIZHupjflBnjFb+mMo5rhtO2f5j1u2Ny3Bbokv+u20J2ZUmjfyPeIAHIbBqc0Tf0TvA2/Rvz1oe/VDYxhN8xLwz5wtvUXTxD3Y3loU7qG3erLu7gZB1wo7ArxqFsdKwf7m7aMAfvSUDTaSpE/cydCtgjB5ZXP4uEzXM71z4ktuO3HIJKxa8VYSey+Pf8N/QXgKzs7DWsX9gAAAABJRU5ErkJggg==',
+  
+ 
 };
 
 
@@ -64,6 +66,7 @@ const MoveableScalableCanvas = () => {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // Draw main rectangle
     ctx.save();
     ctx.translate(rect.x + rect.width / 2, rect.y + rect.height / 2);
     ctx.rotate(rotation * Math.PI / 180);
@@ -71,17 +74,22 @@ const MoveableScalableCanvas = () => {
     ctx.fillRect(-rect.width / 2, -rect.height / 2, rect.width, rect.height);
     ctx.restore();
 
-    const handles = getHandlePositions();
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
-    ctx.shadowBlur = 4;
+    // Only draw handles if step is not 5
+    if (step !== 5) {
+      const handles = getHandlePositions();
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
+      ctx.shadowBlur = 4;
 
-    await drawIcon(ctx, 'move', handles.move.x, handles.move.y);
-    await drawIcon(ctx, 'rotate', handles.rotate.x, handles.rotate.y);
-    await drawIcon(ctx, 'resize', handles.resize.x, handles.resize.y);
-    ctx.shadowColor = 'transparent';
-  }, [rect, rotation, getHandlePositions, drawIcon]);
+      await drawIcon(ctx, 'move', handles.move.x, handles.move.y);
+      await drawIcon(ctx, 'rotate', handles.rotate.x, handles.rotate.y);
+      await drawIcon(ctx, 'resize', handles.resize.x, handles.resize.y);
+      ctx.shadowColor = 'transparent';
+    }
+  }, [rect, rotation, getHandlePositions, drawIcon, step]);
 
   const getActiveHandleType = useCallback((mouseX: number, mouseY: number): HandleType | null => {
+    if (step === 5) return null; // Disable handles when step is 5
+    
     const handles = getHandlePositions();
     const handleRadius = 15;
 
@@ -94,9 +102,9 @@ const MoveableScalableCanvas = () => {
     if (checkHandle(handles.resize.x, handles.resize.y)) return 'resize';
 
     return null;
-  }, [getHandlePositions]);
+  }, [getHandlePositions, step]);
 
-  const handleMouseDown = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+  const MouseDown = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
@@ -112,7 +120,7 @@ const MoveableScalableCanvas = () => {
     }
   };
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
+  const MouseMove = (e: React.MouseEvent<HTMLCanvasElement> | React.TouchEvent<HTMLCanvasElement>) => {
     if (!isDragging || !activeHandle || !canvasRef.current) return;
 
     const canvas = canvasRef.current;
@@ -161,7 +169,7 @@ const MoveableScalableCanvas = () => {
     setStartPos({ x: mouseX, y: mouseY });
   };
 
-  const handleMouseUp = useCallback(() => {
+  const MouseUp = useCallback(() => {
     setIsDragging(false);
     setActiveHandle(null);
   }, []);
@@ -173,10 +181,10 @@ const MoveableScalableCanvas = () => {
   return (
     <canvas
       ref={canvasRef}
-      width={800}
-      height={600}
+      width={557}
+      height={800}
       style={{
-        border: '1px solid #ddd',
+        border: '1px solid red',
         borderRadius: '8px',
         cursor: activeHandle ? {
           move: 'move',
@@ -184,13 +192,13 @@ const MoveableScalableCanvas = () => {
           rotate: 'grab',
         }[activeHandle] : 'default',
       }}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
-      onTouchStart={handleMouseDown}
-      onTouchMove={handleMouseMove}
-      onTouchEnd={handleMouseUp}
+      onMouseDown={MouseDown}
+      onMouseMove={MouseMove}
+      onMouseUp={MouseUp}
+      onMouseLeave={MouseUp}
+      onTouchStart={MouseDown}
+      onTouchMove={MouseMove}
+      onTouchEnd={MouseUp}
     />
   );
 };

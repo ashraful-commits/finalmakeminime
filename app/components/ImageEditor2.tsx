@@ -1,8 +1,11 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useCallback } from "react";
 import { FaCartPlus } from "react-icons/fa";
 import html2canvas from "html2canvas";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
+import { IoMove, IoResize } from "react-icons/io5";
+import { FaArrowsRotate } from "react-icons/fa6";
+type HandleType = "move" | "resize" | "rotate";
 
 interface ImageEditorProps {
   faceImage: string;
@@ -14,10 +17,13 @@ interface ImageEditorProps {
   productId: string;
   skinToneImage: string;
   rotation: number;
-  imagePosition:{x:number,y:number};
-  setImagePosition:React.Dispatch<React.SetStateAction<{x:number,y:number}>>;
-  setScale:React.Dispatch<React.SetStateAction<number>>;
+  imagePosition: { x: number; y: number };
+  setImagePosition: React.Dispatch<
+    React.SetStateAction<{ x: number; y: number }>
+  >;
+  setScale: React.Dispatch<React.SetStateAction<number>>;
   scale: number;
+  setRotation: React.Dispatch<React.SetStateAction<number>>;
 }
 const ImageEditor = ({
   faceImage,
@@ -25,9 +31,14 @@ const ImageEditor = ({
   skinTone,
   headBackImage,
   step,
-  productId,skinToneImage,rotation,imagePosition,setScale,scale,
-  setImagePosition
-}:ImageEditorProps) => {
+  productId,
+  skinToneImage,
+  rotation,
+  imagePosition,
+  setScale,
+  scale,
+  setImagePosition,
+}: ImageEditorProps) => {
   // Refs
   const canvasBodyRef = useRef(null);
   const canvasSkinToneRef = useRef(null);
@@ -41,17 +52,15 @@ const ImageEditor = ({
   const defaultBodyImage = bodyImage || "/images/SN-006_preview (1).png";
   const defualtTransparentBodyImage = "/images/transparentBody.png";
   const defaultSkitToneImage =
-  skinToneImage || "/images/Snugzy_Shape_preview_client.png";
+    skinToneImage || "/images/Snugzy_Shape_preview_client.png";
   const defaultHeadBackImage = headBackImage || "/images/headblack_preview.png";
   const defaultFaceImage = faceImage;
   const defaultSkinTone = skinTone || "grayscale(100%)";
 
-
-
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [loading, setLoading] = useState(false);
-  
+
   const drawImageOnCanvas = (canvasRef, imageSrc, filter = "none") => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -97,191 +106,204 @@ const ImageEditor = ({
     defaultBodyImage,
     defaultSkitToneImage,
     defaultSkinTone,
-    defaultHeadBackImage
+    defaultHeadBackImage,
   ]);
 
-  useEffect(() => {
-    if (!canvasRef.current || !defaultFaceImage) return;
 
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    const imageElement = new Image();
+  const [activeHandle, setActiveHandle] = useState<HandleType | null>(null);
+  const [transform, setTransform] = useState({
+    x: 100,
+    y: 100,
+    width: 200,
+    height: 200,
+    rotation: 0,
+    aspectRatio: 1,
+  });
 
-    imageElement.src = defaultFaceImage;
-    imageElement.crossOrigin = "anonymous";
+  // Store initial positions and dimensions
+  const startValues = useRef({
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0,
+    clientX: 0,
+    clientY: 0,
+  });
 
-    imageElement.onload = () => {
-      const imageWidth = imageElement.naturalWidth/3;
-      const imageHeight = imageElement.naturalHeight/3;
-      const centerX = canvas.width / 2;
-      const centerY = canvas.height / 4;
+  // Get container bounds with memoization
+  const getContainerBounds = useCallback(() => {
+    return containerRef.current?.getBoundingClientRect() || new DOMRect();
+  }, []);
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.save();
+  // Unified input handler with proper touch support
+  const handleStart = useCallback(
+    (type: HandleType, clientX: number, clientY: number) => {
+      if (step === 5) return;
 
-      ctx.translate(centerX, centerY);
-      ctx.rotate((rotation * Math.PI) / 180);
-      ctx.scale(scale, scale);
+      const bounds = getContainerBounds();
+      const x = clientX - bounds.left;
+      const y = clientY - bounds.top;
 
-      ctx.drawImage(
-        imageElement,
-        -imageWidth / 2 + imagePosition.x,
-        -imageHeight / 2 + imagePosition.y,
-        imageWidth,
-        imageHeight
-      );
-      ctx.restore();
-    };
-  }, [defaultFaceImage, imagePosition, scale, rotation]);
-  const [pinchStartDistance, setPinchStartDistance] = useState<number | null>(null);
-  const [initialScale, setInitialScale] = useState(1);
-  const [lastScale, setLastScale] = useState(1);
-  
-  // Add these touch handlers
-  const handleTouchStart = (e: React.TouchEvent) => {
-    e.preventDefault();
-    const touches = e.touches;
-    
-    if (touches.length === 2) {
-      // Calculate initial distance between two fingers
-      const touch1 = touches[0];
-      const touch2 = touches[1];
-      const distance = Math.hypot(
-        touch2.clientX - touch1.clientX,
-        touch2.clientY - touch1.clientY
-      );
-      setPinchStartDistance(distance);
-      setInitialScale(scale);
-    } else if (touches.length === 1) {
-      // Single touch start
-      const rect = canvasRef.current.getBoundingClientRect();
-      const touch = touches[0];
-      setDragStart({
-        x: touch.clientX - rect.left,
-        y: touch.clientY - rect.top,
-      });
+      startValues.current = {
+        x: transform.x,
+        y: transform.y,
+        width: transform.width,
+        height: transform.height,
+        clientX: x,
+        clientY: y,
+      };
+
+      setActiveHandle(type);
       setIsDragging(true);
+
+      // Maintain aspect ratio for resize
+      if (type === "resize") {
+        setTransform((prev) => ({
+          ...prev,
+          aspectRatio: prev.width / prev.height,
+        }));
+      }
+    },
+    [getContainerBounds, step, transform]
+  );
+
+  // Smooth movement handler using requestAnimationFrame
+  const handleMove = useCallback(
+    (clientX: number, clientY: number) => {
+      if (!isDragging || !containerRef.current) return;
+
+      const bounds = getContainerBounds();
+      const x = clientX - bounds.left;
+      const y = clientY - bounds.top;
+      const deltaX = x - startValues.current.clientX;
+      const deltaY = y - startValues.current.clientY;
+
+      const updateTransform = () => {
+        switch (activeHandle) {
+          case "move":
+            setTransform((prev) => ({
+              ...prev,
+              x: startValues.current.x + deltaX,
+              y: startValues.current.y + deltaY,
+            }));
+            break;
+
+          case "resize": {
+            const newWidth = Math.max(50, startValues.current.width + deltaX);
+            const newHeight = newWidth / transform.aspectRatio;
+            setTransform((prev) => ({
+              ...prev,
+              width: newWidth,
+              height: newHeight,
+            }));
+            break;
+          }
+
+          case "rotate": {
+            const centerX = transform.x + transform.width / 2;
+            const centerY = transform.y + transform.height / 2;
+            const angle =
+              Math.atan2(y - centerY, x - centerX) * (180 / Math.PI);
+            setTransform((prev) => ({
+              ...prev,
+              rotation: (angle + 360) % 360,
+            }));
+            break;
+          }
+        }
+      };
+
+      requestAnimationFrame(updateTransform);
+    },
+    [
+      activeHandle,
+      isDragging,
+      transform.aspectRatio,
+      transform.x,
+      transform.y,
+      getContainerBounds,transform.height,transform.width
+    ]
+  );
+
+  // Event handlers with proper passive listeners
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => handleMove(e.clientX, e.clientY);
+    const handleTouchMove = (e: TouchEvent) => {
+      e.preventDefault();
+      handleMove(e.touches[0].clientX, e.touches[0].clientY);
+    };
+
+    const handleEnd = () => {
+      setIsDragging(false);
+      setActiveHandle(null);
+    };
+
+    if (isDragging) {
+      window.addEventListener("mousemove", handleMouseMove);
+      window.addEventListener("touchmove", handleTouchMove, { passive: false });
+      window.addEventListener("mouseup", handleEnd);
+      window.addEventListener("touchend", handleEnd);
     }
-  };
-  
-  const handleTouchMove = (e: React.TouchEvent) => {
-    e.preventDefault();
-    const touches = e.touches;
-  
-    if (touches.length === 2 && pinchStartDistance) {
-      // Handle pinch zoom
-      const touch1 = touches[0];
-      const touch2 = touches[1];
-      const currentDistance = Math.hypot(
-        touch2.clientX - touch1.clientX,
-        touch2.clientY - touch1.clientY
-      );
-      
-      const newScale = (currentDistance / pinchStartDistance) * initialScale;
-      // Limit scale between 0.1x and 3x
-      setScale(Math.min(Math.max(newScale, 0.1), 3));
-    } else if (touches.length === 1 && isDragging) {
-      // Handle single touch drag
-      const rect = canvasRef.current.getBoundingClientRect();
-      const touch = touches[0];
-      const dx = touch.clientX - rect.left - dragStart.x;
-      const dy = touch.clientY - rect.top - dragStart.y;
-  
-      setImagePosition(prev => ({
-        x: prev.x + dx,
-        y: prev.y + dy,
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("touchmove", handleTouchMove);
+      window.removeEventListener("mouseup", handleEnd);
+      window.removeEventListener("touchend", handleEnd);
+    };
+  }, [isDragging, handleMove,setIsDragging]);
+
+  // Responsive container sizing
+  useEffect(() => {
+    const handleResize = () => {
+      const bounds = getContainerBounds();
+      setTransform((prev) => ({
+        ...prev,
+        x: Math.min(prev.x, bounds.width - prev.width),
+        y: Math.min(prev.y, bounds.height - prev.height),
       }));
-  
-      setDragStart({
-        x: touch.clientX - rect.left,
-        y: touch.clientY - rect.top,
-      });
-    }
-  };
-  
-  const handleTouchEnd = () => {
-    setIsDragging(false);
-    setPinchStartDistance(null);
-    setLastScale(scale);
-  };
-  
-  const handleMouseDown = (e) => {
-    const rect = canvasRef.current.getBoundingClientRect();
-    setDragStart({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-    setIsDragging(true);
-  };
-  
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
-    const rect = canvasRef.current.getBoundingClientRect();
-    const dx = e.clientX - rect.left - dragStart.x;  // Horizontal movement (left/right)
-    const dy = e.clientY - rect.top - dragStart.y;   // Vertical movement (up/down)
-  
-    // Update position if there is movement in either direction
-    setImagePosition((prevPos) => ({
-      x: prevPos.x + dx,
-      y: prevPos.y + dy,
-    }));
-  
-    // Update the starting position for the next move
-    setDragStart({ x: e.clientX - rect.left, y: e.clientY - rect.top });
-  };
-  
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-  
-  // Move left function
+    };
 
-  const handleWheel = (e) => {
-    if (e.deltaY > 0) {
-      setScale((prevScale) => Math.max(prevScale - 0.01, 0.01)); 
-    } else {
-      setScale((prevScale) => prevScale + 0.01); 
-    }
-  };
-
-
-
-
-  
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [getContainerBounds]);
 
   const handleAddToCart = async (id: string, faceImage: string) => {
     if (!containerRef.current || !faceImage) {
-      console.error('Missing required elements for image processing');
+      console.error("Missing required elements for image processing");
       return;
     }
-  
+
     setLoading(true);
-  
-    
+
     try {
       // Capture composite image
       const compositeCanvas = await html2canvas(containerRef.current, {
         useCORS: true,
         backgroundColor: "transparent",
-        logging: process.env.NODE_ENV === 'development',
+        logging: process.env.NODE_ENV === "development",
       });
-  
+
       //uuid
-      const uuidgen =  uuidv4();
+      const uuidgen = uuidv4();
       // Prepare upload promises
       const uploadImage = async (imageData: string, imageType: string) => {
         const response = await fetch("/api/upload", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ image: imageData,uuid:uuidgen}),
+          body: JSON.stringify({ image: imageData, uuid: uuidgen }),
         });
-  
+
         if (!response.ok) {
-          throw new Error(`${imageType} image upload failed (${response.status})`);
+          throw new Error(
+            `${imageType} image upload failed (${response.status})`
+          );
         }
-  
+
         const { result }: { result: string } = await response.json();
         return encodeURIComponent(result);
       };
-      
-  
+
       const [productImageUrl, faceImageUrl] = await Promise.all([
         uploadImage(compositeCanvas.toDataURL("image/png"), "Composite"),
         uploadImage(faceImage, "Face"),
@@ -291,22 +313,27 @@ const ImageEditor = ({
       if (!productImageUrl || !faceImageUrl) {
         throw new Error("Image URL generation failed");
       }
-  
+
       window.location.href = `https://makeminime.com/?add-to-cart=${id}&quantity=1&image=${productImageUrl}&faceImage=${faceImageUrl}&uuid=${uuidgen}`;
-  
     } catch (error) {
       console.error("Checkout Error:", error);
       // Implement your error handling strategy here (e.g., toast notifications)
-      window.location.href = `https://makeminime.vercel.app/product/${id}/customize?error=${encodeURIComponent((error as Error).message)}`;
+      window.location.href = `https://makeminime.vercel.app/product/${id}/customize?error=${encodeURIComponent(
+        (error as Error).message
+      )}`;
     } finally {
       setLoading(false);
     }
   };
-  
 
-  
   return (
-    <div className={` flex-col border-r border-r-gray-500 items-center justify-center w-[50%] max-sm:w-full max-sm:border-b z-0 lg:min-h-[80vh] max-sm:min-h-[400px]  md:min-h-[80vh] ${step===0 || step===4 || step===7 ||step===8 ? "flex":"max-sm:hidden"}`}>
+    <div
+      className={` flex-col border-r border-r-gray-500 items-center justify-center w-[50%] max-sm:w-full max-sm:border-b z-0 lg:min-h-[80vh] max-sm:min-h-[400px]  md:min-h-[80vh] ${
+        step === 0 || step === 4 || step === 7 || step === 8
+          ? "flex"
+          : "max-sm:hidden"
+      }`}
+    >
       <div className="relative w-full flex justify-center items-center  bg-center bg-no-repeat lg:min-h-[90vh] max-sm:min-h-[50vh] md:min-h-[80vh] max-sm:h-[35vh]">
         <div
           ref={containerRef}
@@ -322,20 +349,168 @@ const ImageEditor = ({
 
           {/* Face Image */}
           {faceImage ? (
-            <canvas
-              id="canvasRef"
+            <div
               ref={canvasRef}
-              width={"557px"}
-              height={"800px"}
-              className=" sticky top-3 hover:cursor-grab hover:border-[6px] rounded-full border-[6px] border-transparent z-40 faceImage"
-              onMouseDown={handleMouseDown}
-              onMouseMove={handleMouseMove}
-              onMouseUp={handleMouseUp}
-              onWheel={handleWheel}
-              onTouchStart={handleTouchStart}
-              onTouchMove={handleTouchMove}
-              onTouchEnd={handleTouchEnd}
-            />
+              style={{
+                position: "relative",
+                width: "100%",
+                maxWidth: "557px",
+                height: "80vh",
+                maxHeight: "800px",
+                touchAction: "none",
+                userSelect: "none",
+                overflow: "hidden",
+                margin: "0 auto",
+                zIndex:50
+              }}
+            >
+              {/* Main Element */}
+              <div
+              role="button"
+              tabIndex={-3}
+                style={{
+                  position: "absolute",
+                  left: transform.x,
+                  top: transform.y,
+                  width: transform.width,
+                  height: transform.height,
+                  transform: `rotate(${transform.rotation}deg)`,
+                  transition: isDragging
+                    ? "none"
+                    : "all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28)",
+                  transformOrigin: "center center",
+                  willChange: "transform, width, height",
+                  border: "2px solid rgba(255, 255, 255, 0.3)",
+                  borderRadius: "4px",
+                }}
+                onMouseDown={(e) =>{ e.stopPropagation(),handleStart("move", e.clientX, e.clientY)}}
+                  onTouchStart={(e) =>
+                    {e.stopPropagation(),handleStart(
+                      "move",
+                      e.touches[0].clientX,
+                      e.touches[0].clientY
+                    )}
+                  }
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      handleStart("move", e.clientX, e.clientY);
+                    }
+                  }} 
+              >
+                <img src={defaultFaceImage} alt="" />
+                {/* Handles */}
+                <div
+                  // Move Handle
+                  className="flex justify-center items-center"
+                  role="button" // Add a role attribute to indicate that it's a interactive element
+                  tabIndex={0} // Add tabIndex to make it focusable
+                  style={{
+                    position: "absolute",
+                    top: -28,
+                    left: -28,
+                    width: 24,
+                    height: 24,
+                    backgroundColor:"white",
+                    cursor: "move",
+                    borderRadius: "50%",
+                    boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+                    touchAction: "none",
+                    transition: "background-color 0.2s",
+                  }}
+                  onMouseDown={(e) => {e.stopPropagation(), handleStart("move", e.clientX, e.clientY)}}
+                  onTouchStart={(e) =>{e.stopPropagation(),
+                    handleStart(
+                      "move",
+                      e.touches[0].clientX,
+                      e.touches[0].clientY
+                    )}
+                  }
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      handleStart("move", e.clientX, e.clientY);
+                    }
+                  }} // Add support for keyboard input
+                >
+                  <IoMove className="text-xl text-blue-500" />
+                </div>
+
+                <div
+                  // Rotate Handle
+                  role="button" // Add a role attribute to indicate that it's a button
+                  tabIndex={0} // Add tabIndex to make it focusable
+                  style={{
+                    position: "absolute",
+                    top: -28,
+                    right: -28,
+                    width: 24,
+                    height: 24,
+                    backgroundColor:"white",
+                    cursor: "grab",
+                    borderRadius: "50%",
+                    boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+                    touchAction: "none",
+                    transform: `rotate(${-transform.rotation}deg)`,
+                    transition: "background-color 0.2s, transform 0.3s",
+                  }}
+                  className="flex items-center justify-center"
+                  onMouseDown={(e) =>
+                    {e.stopPropagation(),handleStart("rotate", e.clientX, e.clientY)}
+                  }
+                  onTouchStart={(e) =>
+                    handleStart(
+                      "rotate",
+                      e.touches[0].clientX,
+                      e.touches[0].clientY
+                    )
+                  }
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      handleStart("rotate", e.clientX, e.clientY);
+                    }
+                  }} // Add support for keyboard input
+                >
+                  <FaArrowsRotate className="text-lg text-blue-500" />
+                </div>
+                <div
+                  // Resize Handle
+                  role="button" // Add a role attribute to indicate that it's a button
+                  tabIndex={0} // Add tabIndex to make it focusable
+                  style={{
+                    position: "absolute",
+                    bottom: -28,
+                    right: -28,
+                    width: 24,
+                    height: 24,
+                    backgroundColor:"white",
+                    cursor: "nwse-resize",
+                    borderRadius: "4px",
+                    boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
+                    touchAction: "none",
+                    transition: "background-color 0.2s",
+                  }}
+                  onMouseDown={(e) =>{e.stopPropagation(),
+                    handleStart("resize", e.clientX, e.clientY)}
+                  }
+                  onTouchStart={(e) => {e.stopPropagation(),
+                    handleStart(
+                      "resize",
+                      e.touches[0].clientX,
+                      e.touches[0].clientY
+                    )}
+                  }
+                  className="flex justify-center items-center "
+                  onKeyDown={(e) => {
+                    // Add support for keyboard input
+                    if (e.key === "Enter" || e.key === " ") {
+                      handleStart("resize", e.clientX, e.clientY);
+                    }
+                  }}
+                >
+                  {" "}
+                  <IoResize className="text-blue-500 text-xl rotate-90" />{" "}
+                </div>
+              </div>
+            </div>
           ) : (
             <img
               className="top-1 absolute max-h-[450px] z-40 max-sm:scale-90"
@@ -351,7 +526,7 @@ const ImageEditor = ({
             height={"800px"}
             className="absolute z-1 h-full "
           />
-            <canvas
+          <canvas
             ref={canvasTransparentRef}
             width={"557px"}
             height={"800px"}
@@ -363,7 +538,6 @@ const ImageEditor = ({
             height={"800px"}
             className=" absolute z-20 top-[0.20rem] h-full "
           />
-
         </div>
       </div>
 
@@ -383,16 +557,11 @@ const ImageEditor = ({
               Add to Basket
             </button>
           </div>
-              </>
+        </>
       )}
-       
-       
-      
     </div>
   );
 };
-
-// Reusable control button component
 
 
 export default ImageEditor;
