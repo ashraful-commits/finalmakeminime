@@ -7,6 +7,7 @@ import {
   FaPinterest,
   FaStar,
 } from "react-icons/fa";
+
 import {
   Carousel,
   CarouselContent,
@@ -296,6 +297,8 @@ export default function Index() {
           ))}
         </div>
       </section>
+  
+
     </main>
   );
 }

@@ -25,6 +25,7 @@ import { Buffer } from "buffer";
 import SkinTone from "~/components/SkinTone";
 import Position from "~/components/Position";
 import { FaX } from "react-icons/fa6";
+import MoveableScalableCanvas from "~/components/MoveableCanvas";
 
 // Type for product meta data
 interface ProductMetaData {
@@ -517,6 +518,7 @@ export default function ProductIdCustomize() {
           </div>
         </>
       )}
+      <MoveableScalableCanvas/>
     </div>
   );
 }
