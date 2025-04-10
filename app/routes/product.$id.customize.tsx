@@ -301,7 +301,7 @@ export default function ProductIdCustomize() {
   }, [unsavedChanges]);
   console.log(step);
   return (
-    <div className="h-screen w-[100vw] max-sm:w-full  top-0 left-0 text-black min-h-[80vh] relative max-sm:h-[97vh]">
+    <div className="h-screen w-screen max-sm:w-full  top-0 left-0 text-black min-h-[80vh] relative max-sm:h-[97vh]">
       {/* Exit Link */}
       {loading ? (
         <div className="loader w-full h-screen flex gap-3 flex-col justify-center items-center">
@@ -348,7 +348,7 @@ export default function ProductIdCustomize() {
           </div>
 
           {/* Main Section */}
-          <div className="w-full flex gap-2 max-sm:flex-col justify-between items-center min-h-[80vh]">
+          <div className="w-full flex gap-2 max-sm:flex-col justify-between items-center ">
             {/* Left Section - Image Preview */}
             <ImageEditor2
               faceImage={faceImage}
@@ -381,9 +381,9 @@ export default function ProductIdCustomize() {
               />
             )}
 
-            {uploadedPhoto && step == 1 && (
-              <div className="w-[50%] max-h-[50vh] max-sm:w-full flex flex-col items-center justify-between relative">
-                {uploadedPhoto && (
+            {uploadedPhoto && step == 1 && 
+              
+
                   <ImageCropper
                     src={uploadedPhoto}
                     setUploadedPhoto={setUploadedPhoto}
@@ -391,9 +391,9 @@ export default function ProductIdCustomize() {
                     setStep={setStep}
                     step={step}
                   />
-                )}
-              </div>
-            )}
+                
+              
+            }
             {step === 0 && (
               <div
                 className={`w-[50%]   max-sm:w-full flex flex-col  items-center justify-center max-sm:min-h-[50vh]`}

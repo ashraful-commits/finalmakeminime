@@ -3,6 +3,7 @@ import * as fabric from "fabric";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import { LiaCutSolid } from "react-icons/lia";
 import { IoArrowBackOutline } from "react-icons/io5"
+import ContainerBox from "./ContainerBox";
 const FaceCutterApp = ({ faceImage, setStep, setCropedImage, step }) => {
   const [removeBG, setRemoveBG] = useState(null);
   const [error, setError] = useState("");
@@ -11,45 +12,45 @@ const FaceCutterApp = ({ faceImage, setStep, setCropedImage, step }) => {
   const imageRef = useRef(null);
   const [removeLoader, setRemoveLoader] = useState(false);
 
-  useEffect(() => {
-    const loadImage = () => {
-      if (removeBG instanceof Blob || removeBG instanceof File) {
-        const reader = new FileReader();
+  // useEffect(() => {
+  //   const loadImage = () => {
+  //     if (removeBG instanceof Blob || removeBG instanceof File) {
+  //       const reader = new FileReader();
 
-        reader.onload = () => {
-          let imageElement = document.createElement("img");
-          imageElement.src = reader.result;
+  //       reader.onload = () => {
+  //         let imageElement = document.createElement("img");
+  //         imageElement.src = reader.result;
 
-          imageElement.onload = function () {
-            let image = new fabric.Image(imageElement);
-            image.scaleToWidth(canvasInstance.current.width);
-            image.scaleToHeight(canvasInstance.current.height);
-            imageRef.current = image;
-            canvasInstance.current.add(image);
-            canvasInstance.current.centerObject(image);
-            canvasInstance.current.setActiveObject(image);
-          };
-        };
+  //         imageElement.onload = function () {
+  //           let image = new fabric.Image(imageElement);
+  //           image.scaleToWidth(canvasInstance.current.width);
+  //           image.scaleToHeight(canvasInstance.current.height);
+  //           imageRef.current = image;
+  //           canvasInstance.current.add(image);
+  //           canvasInstance.current.centerObject(image);
+  //           canvasInstance.current.setActiveObject(image);
+  //         };
+  //       };
 
-        reader.readAsDataURL(removeBG);
-      } else if (typeof removeBG === "string") {
-        let imageElement = document.createElement("img");
-        imageElement.src = removeBG;
+  //       reader.readAsDataURL(removeBG);
+  //     } else if (typeof removeBG === "string") {
+  //       let imageElement = document.createElement("img");
+  //       imageElement.src = removeBG;
 
-        imageElement.onload = function () {
-          let image = new fabric.Image(imageElement);
-          image.scaleToWidth(canvasInstance.current.width);
-          image.scaleToHeight(canvasInstance.current.height);
-          imageRef.current = image;
-          canvasInstance.current.add(image);
-          canvasInstance.current.centerObject(image);
-          canvasInstance.current.setActiveObject(image);
-        };
-      }
-    };
+  //       imageElement.onload = function () {
+  //         let image = new fabric.Image(imageElement);
+  //         image.scaleToWidth(canvasInstance.current.width);
+  //         image.scaleToHeight(canvasInstance.current.height);
+  //         imageRef.current = image;
+  //         canvasInstance.current.add(image);
+  //         canvasInstance.current.centerObject(image);
+  //         canvasInstance.current.setActiveObject(image);
+  //       };
+  //     }
+  //   };
 
-    loadImage();
-  }, [removeBG]);
+  //   loadImage();
+  // }, [removeBG]);
 
   // face cut handler
   const handleFaceCut = async () => {
@@ -130,13 +131,14 @@ const FaceCutterApp = ({ faceImage, setStep, setCropedImage, step }) => {
 
   return (
     <div
-      className={`w-[50%] max-sm:w-full flex space-y-10  flex-col items-center justify-between max-sm:justify-center border-gray-300 lg:border-r md:border-r max-sm:border-none min-h-[80vh] p-4 bg-white max-sm:space-y-6   rounded-lg relative ${
-        step !== 7 ? " max-sm:min-h-[90vh]" : ""
+      className={`w-[50%] max-sm:w-full flex space-y-10  min-h-[90vh]  flex-col items-center justify-between border-gray-300 lg:border-r md:border-r max-sm:border-none px-2 bg-white max-sm:space-y-6   rounded-lg relative ${
+        step !== 7 ? "" : ""
       }`}
     >
       <h2 className="text-xl font-semibold text-center text-blue-500 mb-6">
         Cutout
       </h2>
+      <ContainerBox>
       {error && <p className="text-red-500 text-sm">{error}</p>}
       {removeLoader && <p className="text-blue-500 text-lg max-sm:text-sm">We're Cutting Out Your Face...
         </p>}
@@ -160,11 +162,12 @@ const FaceCutterApp = ({ faceImage, setStep, setCropedImage, step }) => {
           />
         </div>
       )}
+      </ContainerBox>
 
       <div className="flex justify-center  gap-4 mb-6 mt-20 max-sm:mt-0 max-sm:sticky bottom-0 left-0 w-full">
         <button
           onClick={handleBack}
-          className="px-4 py-1 text-sm  rounded-md bg-blue-100  hover:bg-blue-700 text-blue-500 bg-opacity-50 border hover:text-white border-blue-500 font-medium flex items-center justify-center "
+          className="px-4 py-3 text-sm  rounded-md bg-blue-100  hover:bg-blue-700 text-blue-500 bg-opacity-50 border hover:text-white border-blue-500 font-medium flex items-center justify-center "
         >
            Back
         </button>
@@ -173,7 +176,7 @@ const FaceCutterApp = ({ faceImage, setStep, setCropedImage, step }) => {
           <button
             // onClick={handleRemoveBg}
             onClick={handleFaceCut}
-            className="px-20 max-sm:px-8  py-2 bg-blue-500   text-white text-sm rounded hover:bg-blue-800 border flex justify-center items-center gap-2 max-sm:gap-1 w-full"
+            className="px-20 max-sm:px-8  py-3 bg-blue-500   text-white text-sm rounded hover:bg-blue-800 border flex justify-center items-center gap-2 max-sm:gap-1 w-full"
           >
             {removeLoader ? (
               <AiOutlineLoading3Quarters className="animate-spin" />
@@ -183,9 +186,9 @@ const FaceCutterApp = ({ faceImage, setStep, setCropedImage, step }) => {
         )}
       </div>
 
-      <div className="flex justify-center">
+      {/* <div className="flex justify-center">
         <canvas ref={canvasRef} className="rounded-md" />
-      </div>
+      </div> */}
     </div>
   );
 };

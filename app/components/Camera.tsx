@@ -2,6 +2,8 @@ import { useState } from "react";
 import Camera from "react-html5-camera-photo";
 import "react-html5-camera-photo/build/css/index.css";
 import { FaArrowLeft } from "react-icons/fa";
+import ContainerBox from "./ContainerBox";
+import ButtonBox from './ButtonBox';
 
 interface CameraComponentProps {
   setStep: React.Dispatch<React.SetStateAction<number>>;
@@ -29,11 +31,11 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
   };
 
   return (
-    <div className="w-[50%] max-sm:w-full flex flex-col items-center justify-center border-gray-300 lg:border-r md:border-r max-sm:border-b min-h-[80vh] p-4 bg-white rounded-lg relative">
-      <h2 className="text-lg font-light text-blue-500 mb-4">
+    <div className="w-[50%] max-sm:w-full flex flex-col items-center justify-between border-gray-300 lg:border-r md:border-r max-sm:border-b min-h-[90vh] p-4 bg-white rounded-lg relative">
+      <h2 className="text-lg font-bold text-blue-500 mb-4">
         Capture Your Photo
       </h2>
-      <div className="relative w-full border border-blue-500 p-3 rounded-md">
+      <ContainerBox>
         <Camera
           onTakePhoto={handleTakePhoto}
           isImageMirror={false}
@@ -45,13 +47,13 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
             Processing...
           </div>
         )}
-      </div>
-      <button
+      </ContainerBox>
+      <ButtonBox><button
         onClick={handleBack}
-        className="mt-4 px-4 py-2 flex items-center gap-2 bg-blue-300 border border-blue-500 hover:text-white rounded-lg text-blue-500 hover:bg-blue-500 bg-opacity-50 transition duration-300 text-sm font-light"
+        className="mt-4 px-4 py-3 flex items-center gap-2 bg-blue-500 border  text-white rounded-lg hover:bg-blue-600 transition duration-300 text-md font-bold"
       >
          Back to upload
-      </button>
+      </button></ButtonBox>
     </div>
   );
 };
