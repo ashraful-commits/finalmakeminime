@@ -95,3 +95,9 @@ body {
 .animate-slide {
   animation: slide 1.5s ease-in-out infinite alternate;
 }
+
+@media screen and (max-width: 768px) {
+  .position{
+    transform: translateX(140px);
+  }
+}

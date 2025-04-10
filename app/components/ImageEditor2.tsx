@@ -328,7 +328,7 @@ const ImageEditor = ({
       <div className="relative w-full flex justify-center items-center  bg-center bg-no-repeat lg:min-h-[90vh] max-sm:min-h-[50vh] md:min-h-[80vh] max-sm:h-[35vh]">
         <div
           ref={containerRef}
-          className="relative w-[557px] h-[800px] flex justify-center items-center top-0 max-sm:scale-50 "
+          className="relative w-[557px] h-[800px] flex justify-center items-center top-0 max-sm:scale-[.60] "
         >
           {/* Background Layers */}
           <canvas
@@ -352,7 +352,7 @@ const ImageEditor = ({
                 margin: "0 auto",
                 zIndex: 30,
               }}
-              className=" w-full"
+              className=" w-full scale-110"
             >
               {/* Main Element */}
               <div
@@ -370,9 +370,9 @@ const ImageEditor = ({
                   transformOrigin: "center center",
                   willChange: "transform, width, height",
                   zIndex: 30,
-
+                  
                 }}
-                
+               className="position"
               >
                 <img
                   src={defaultFaceImage}
@@ -408,7 +408,7 @@ const ImageEditor = ({
                 margin: "0 auto",
                 zIndex: 10000,
               }}
-              className=" w-full"
+              className=" w-full scale-110"
             >
               {/* Main Element */}
               <div
@@ -446,6 +446,7 @@ const ImageEditor = ({
                     handleStart("move", e.clientX, e.clientY);
                   }
                 }}
+                className="position"
               >
                
                 {/* Handles */}
@@ -453,7 +454,7 @@ const ImageEditor = ({
                   <>
                     <div
                       // Move Handle
-                      className="flex justify-center items-center scale-120"
+                      className="flex justify-center items-center"
                       role="button" // Add a role attribute to indicate that it's a interactive element
                       tabIndex={0} // Add tabIndex to make it focusable
                       style={{
@@ -506,7 +507,7 @@ const ImageEditor = ({
                         transform: `rotate(${-transform.rotation}deg)`,
                         transition: "background-color 0.2s, transform 0.3s",
                       }}
-                      className="flex items-center justify-center  scale-120"
+                      className="flex items-center justify-center "
                       onMouseDown={(e) => {
                         e.stopPropagation(),
                           handleStart("rotate", e.clientX, e.clientY);
@@ -545,7 +546,7 @@ const ImageEditor = ({
                         border: "1px solid #3b82f6",
                         transition: "background-color 0.2s, transform 0.3s",
                       }}
-                      className="flex items-center justify-center  scale-120"
+                      className="flex items-center justify-center "
                       // Add support for keyboard input
                     ></div>
                     <div
@@ -577,7 +578,7 @@ const ImageEditor = ({
                             e.touches[0].clientY
                           );
                       }}
-                      className="flex justify-center items-center  scale-120"
+                      className="flex justify-center items-center "
                       onKeyDown={(e) => {
                         // Add support for keyboard input
                         if (e.key === "Enter" || e.key === " ") {
