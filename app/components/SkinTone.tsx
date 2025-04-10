@@ -164,7 +164,7 @@ const SkinTone = ({ step, setStep, skinTone, setSkinTone }: skinToneType) => {
       </div>
 
       {/* Skin Tone Selection Grid */}
-      <div className="grid grid-cols-4  max-sm:justify-center max-sm:items-center gap-4 w-full justify-center items-center border p-4 overflow-auto">
+      <div className="grid grid-cols-4  gap-4 w-full justify-center items-center border p-4 scale-75">
         {skinTones.map((tone) => (
           <button
             key={tone.id}
