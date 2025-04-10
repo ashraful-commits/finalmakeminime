@@ -247,12 +247,14 @@ const ImageEditor = ({
   // Responsive container sizing
   useEffect(() => {
     const handleResize = () => {
-      const bounds = getContainerBounds();
+      if(step===4){
+        const bounds = getContainerBounds();
       setTransform((prev) => ({
         ...prev,
         x: Math.min(prev.x, bounds.width - prev.width),
         y: Math.min(prev.y, bounds.height - prev.height),
       }));
+      }
     };
 
     window.addEventListener("resize", handleResize);
@@ -316,8 +318,8 @@ const ImageEditor = ({
       setLoading(false);
     }
   };
-const dynamicX = transform.x
-const dynamicY = transform.y
+  const dynamicX = transform.x;
+  const dynamicY = transform.y;
   return (
     <div
       className={` flex-col border-r border-r-gray-500 max-sm:border-r-0 items-center justify-center w-[50%] max-sm:w-full max-sm:border-b z-0 lg:min-h-[80vh] max-sm:min-h-[450px]  md:min-h-[80vh] ${
@@ -361,8 +363,8 @@ const dynamicY = transform.y
                 tabIndex={-3}
                 style={{
                   position: "absolute",
-                  left: step===4? transform.x:dynamicX,
-                  top:step===4? transform.y: dynamicY,
+                  left: step === 4 ? transform.x : dynamicX,
+                  top: step === 4 ? transform.y : dynamicY,
                   width: transform.width * transform.zoom,
                   height: transform.height * transform.zoom,
                   transition: isDragging
@@ -371,9 +373,8 @@ const dynamicY = transform.y
                   transformOrigin: "center center",
                   willChange: "transform, width, height",
                   zIndex: 30,
-                  
                 }}
-               className="position"
+                className="position"
               >
                 <img
                   src={defaultFaceImage}
@@ -387,7 +388,6 @@ const dynamicY = transform.y
                   className=" w-auto h-full mx-auto"
                   alt=""
                 />
-                
               </div>
             </div>
           ) : (
@@ -397,7 +397,7 @@ const dynamicY = transform.y
               alt="face preview"
             />
           )}
- {faceImage && (
+          {faceImage && (
             <div
               ref={canvasRef}
               style={{
@@ -417,8 +417,8 @@ const dynamicY = transform.y
                 tabIndex={-3}
                 style={{
                   position: "absolute",
-                  left: step===4? transform.x:dynamicX,
-                  top:step===4? transform.y: dynamicY,
+                  left: step === 4 ? transform.x : dynamicX,
+                  top: step === 4 ? transform.y : dynamicY,
                   width: transform.width * transform.zoom,
                   height: transform.height * transform.zoom,
                   transition: isDragging
@@ -432,24 +432,31 @@ const dynamicY = transform.y
                 }}
                 onMouseDown={(e) => {
                   e.stopPropagation();
-                  handleStart("move", e.clientX, e.clientY);
+                  if(step===4){
+                    handleStart("move", e.clientX, e.clientY);
+                  }
                 }}
                 onTouchStart={(e) => {
                   e.stopPropagation();
-                  handleStart(
-                    "move",
-                    e.touches[0].clientX,
-                    e.touches[0].clientY
-                  );
+                  if(step===4){
+                    handleStart(
+                      "move",
+                      e.touches[0].clientX,
+                      e.touches[0].clientY
+                    );
+                  }
                 }}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    handleStart("move", e.clientX, e.clientY);
+                  e.stopPropagation()
+                  if(step===4){
+
+                    if (e.key === "Enter" || e.key === " ") {
+                      handleStart("move", e.clientX, e.clientY);
+                    }
                   }
                 }}
                 className="position"
               >
-               
                 {/* Handles */}
                 {step === 4 && (
                   <>
@@ -471,20 +478,28 @@ const dynamicY = transform.y
                         transition: "background-color 0.2s",
                       }}
                       onMouseDown={(e) => {
-                        e.stopPropagation(),
+                        e.stopPropagation()
+                        if(step===4){
+
                           handleStart("move", e.clientX, e.clientY);
+                        }
                       }}
                       onTouchStart={(e) => {
-                        e.stopPropagation(),
+                        e.stopPropagation()
+                        if(step===4){
                           handleStart(
                             "move",
                             e.touches[0].clientX,
                             e.touches[0].clientY
                           );
+                        }
                       }}
                       onKeyDown={(e) => {
-                        if (e.key === "Enter" || e.key === " ") {
-                          handleStart("move", e.clientX, e.clientY);
+                        e.stopPropagation()
+                        if(step===4){
+                          if (e.key === "Enter" || e.key === " ") {
+                            handleStart("move", e.clientX, e.clientY);
+                          }
                         }
                       }} // Add support for keyboard input
                     >
@@ -594,7 +609,7 @@ const dynamicY = transform.y
                 )}
               </div>
             </div>
-          ) }
+          )}
           {/* Other Layers */}
           <canvas
             ref={canvasSkinToneRef}
@@ -608,7 +623,7 @@ const dynamicY = transform.y
             width={"557px"}
             height={"800px"}
             className="absolute  h-full z-50 pointer-events-none overflow-hidden"
-          /> 
+          />
           <canvas
             ref={canvasBodyRef}
             width={"557px"}

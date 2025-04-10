@@ -39,34 +39,39 @@ const zoomOut = () => {
 };
 
   // Function to move div in specific direction
-  const moveUp = () => {
+  const moveUp = (e) => {
+    e.preventDefault();
     setTransform((prev) => ({
       ...prev,
       y: Math.max(prev.y - 10, 0), // Prevent moving out of bounds
     }));
   };
 
-  const moveDown = () => {
+  const moveDown = (e) => {
+    e.preventDefault();
     setTransform((prev) => ({
       ...prev,
       y: prev.y + 10, // You may want to limit maximum movement here
     }));
   };
 
-  const moveLeft = () => {
+  const moveLeft = (e) => {
+    e.preventDefault();
     setTransform((prev) => ({
       ...prev,
       x: prev.x - 10, // Prevent moving out of bounds
     }));
   };
 
-  const moveRight = () => {
+  const moveRight = (e) => {
+    e.preventDefault();
     setTransform((prev) => ({
       ...prev,
       x: prev.x + 10, // You may want to limit maximum movement here
     }));
   };
   const handleConfirm = () => {
+    
     setStep(8);
   };
   const handleBack = () => {

@@ -96,8 +96,8 @@ body {
   animation: slide 1.5s ease-in-out infinite alternate;
 }
 
-/* @media screen and (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .position{
-    transform: translateX(160px);
+    transform: translateX(-100px);
   }
-} */
+}

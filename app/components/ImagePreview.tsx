@@ -12,8 +12,7 @@ interface imgePreviewType {
 function ImagePreview({ croppedImage, setStep, setCropedImage,step,setFaceImage }:imgePreviewType) {
   const [brightness, setBrightness] = useState(100);
   const [contrast, setContrast] = useState(100);
-  const [rotation, setRotation] = useState(0);
-  const [zoom, setZoom] = useState(100);
+
 
   const handleSave = () => {
     const canvas = document.createElement("canvas");
@@ -24,9 +23,9 @@ function ImagePreview({ croppedImage, setStep, setCropedImage,step,setFaceImage 
 
     img.src = croppedImage;
     img.onload = () => {
-      const zoomFactor = zoom / 100;
-      canvas.width = img.width * zoomFactor;
-      canvas.height = img.height * zoomFactor;
+
+      canvas.width = img.width ;
+      canvas.height = img.height ;
 
       // Set up the filter string
       const filter = `brightness(${brightness}%) contrast(${contrast}%)`;
@@ -34,7 +33,6 @@ function ImagePreview({ croppedImage, setStep, setCropedImage,step,setFaceImage 
       // Apply the filter and transformation
       context.filter = filter;
       context.translate(canvas.width / 2, canvas.height / 2);
-      context.rotate((rotation * Math.PI) / 180);
       context.translate(-canvas.width / 2, -canvas.height / 2);
 
       // Draw the image on the canvas with zoom and transformations applied
@@ -42,8 +40,8 @@ function ImagePreview({ croppedImage, setStep, setCropedImage,step,setFaceImage 
         img,
         0,
         0,
-        img.width * zoomFactor,
-        img.height * zoomFactor
+        img.width ,
+        img.height 
       );
 
       const dataUrl = canvas.toDataURL();
@@ -72,7 +70,6 @@ function ImagePreview({ croppedImage, setStep, setCropedImage,step,setFaceImage 
           <div
             className="relative max-w-xs max-h-xs flex justify-center items-center overflow-hidden max-sm:min-h-[200px]"
             style={{
-              transform: `rotate(${rotation}deg) scale(${zoom / 100})`,
               filter: `brightness(${brightness}%) contrast(${contrast}%)`,
               transition: "transform 0.2s, filter 0.2s",
             }}
@@ -112,32 +109,7 @@ function ImagePreview({ croppedImage, setStep, setCropedImage,step,setFaceImage 
                 className="w-full mt-2 h-1 border-none outline-none"
               />
             </div>
-            <div>
-              <label htmlFor="rotation" className="block text-sm font-medium text-gray-700">
-                Rotate (°)
-              </label>
-              <input
-              id="rotation"
-                type="number"
-                value={rotation}
-                onChange={(e) => setRotation(e.target.value)}
-                className="w-full mt-2 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-transparent"
-              />
-            </div>
-            <div>
-              <label htmlFor="zoom" className="block text-sm font-medium text-gray-700">
-                Zoom
-              </label>
-              <input
-              id="zoom"
-                type="range"
-                min="50"
-                max="200"
-                value={zoom}
-                onChange={(e) => setZoom(e.target.value)}
-                className="w-full mt-2 h-1 border-none outline-none"
-              />
-            </div>
+            
             <div className="flex justify-center mt-6 gap-2 w-full">
               <button
                 onClick={handleBack}

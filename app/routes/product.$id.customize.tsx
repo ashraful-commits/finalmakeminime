@@ -176,7 +176,7 @@ export default function ProductIdCustomize() {
   const [scale, setScale] = useState(0.7);
   const [step, setStep] = useState<number>(0);
   const [transform, setTransform] = useState({
-    x: 130,
+    x: 80,
     y: 50,
     width: 400,
     height: 400,
