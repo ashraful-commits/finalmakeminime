@@ -147,7 +147,7 @@ const zoomOut = () => {
           </div>
         </div>
       </div>
-      <div className="flex justify-end max-sm:min-w-full max-sm:px-4 items-center min-w-80  gap-3 mt-5 max-sm:mt-1 max-sm:mb-2 w-full  px-3">
+      <div className="flex justify-end max-sm:min-w-full max-sm:px-4 items-center min-w-80  gap-3 mt-5 max-sm:my-1 max-sm:mb-2 w-full  px-3">
         <button
           className="px-4 text-sm py-2 bg-blue-200 bg-opacity-50 text-blue-700 rounded-lg border border-blue-800 focus:outline-none focus:ring-2 hover:bg-blue-700 focus:ring-blue-500 hover:text-white flex justify-center items-center gap-2"
           onClick={handleBack}
