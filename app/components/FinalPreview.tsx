@@ -25,14 +25,14 @@ const FinalPreview: React.FC<FinalPreviewProps> = ({
       }`}
     >
       {croppedImage && (
-        <div className="flex justify-center items-center gap-3">
-          <p className="text-blue-500 text-lg max-sm:text-sm">Face:</p>
-          <img className="w-20 h-auto" src={croppedImage} alt="Cropped face" />
+        <div className="flex justify-start max-sm:justify-center items-center gap-3 max-sm:flex-col max-sm:gap-1">
+          <p className="text-blue-500 text-lg max-sm:text-sm text-start">Face</p>
+          <img className="w-20 h-auto max-sm:w-10 " src={croppedImage} alt="Cropped face" />
         </div>
       )}
-      <div className="flex justify-start items-center gap-3">
+      <div className="flex justify-start max-sm:justify-center items-center gap-3 max-sm:flex-col max-sm:gap-1">
         <p className="text-blue-500 text-lg max-sm:text-sm text-start">
-          Skin Tone:
+          Skin Tone
         </p>
         <div
           className="w-10 h-10 bg-black rounded-full"

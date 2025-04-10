@@ -138,7 +138,7 @@ function ImagePreview({ croppedImage, setStep, setCropedImage,step,setFaceImage 
                 className="w-full mt-2 h-1 border-none outline-none"
               />
             </div>
-            <div className="flex justify-center mt-6 gap-2">
+            <div className="flex justify-center mt-6 gap-2 w-full">
               <button
                 onClick={handleBack}
                 className="px-4 text-sm py-2 bg-blue-200 bg-opacity-50 text-blue-700 rounded-lg border border-blue-800 focus:outline-none focus:ring-2 hover:bg-blue-700 focus:ring-blue-500 hover:text-white"
@@ -148,7 +148,7 @@ function ImagePreview({ croppedImage, setStep, setCropedImage,step,setFaceImage 
               </button>
               <button
                 onClick={handleSave}
-                className="px-20 max-sm:px-8  py-2 bg-blue-500   text-white text-sm rounded hover:bg-blue-800 border flex justify-center items-center gap-2 max-sm:gap-1 "
+                className="px-20 max-sm:px-8 w-full  py-2 bg-blue-500   text-white text-sm rounded hover:bg-blue-800 border flex justify-center items-center gap-2 max-sm:gap-1 "
               >
                 <AiOutlineCheck className="inline-block mr-2" />
                 Confirm

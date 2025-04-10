@@ -61,7 +61,7 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
 
   return (
     <div
-      className={`w-full h-full max-sm:relative max-sm:w-full justify-between max-sm:justify-center flex flex-col items-center space-y-4 min-h-full  max-sm:mb-5 ${
+      className={`w-full h-full max-sm:relative max-sm:w-full  justify-center flex flex-col items-center space-y-4 min-h-full  max-sm:mb-5 ${
         step !== 7 ? " max-sm:min-h-[100vh]" : ""
       }`}
     >
@@ -77,10 +77,10 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
       />
 
       {/* Controls */}
-      <div className="flex max-sm:scale- space-x-2  rounded-md justify-center items-center p-5 w-full  max-sm:z-100">
+      <div className="flex  space-x-2  rounded-md items-center p-5 w-full max-sm:z-100 max-sm:w-full ">
         <button
           onClick={handleChangePhoto}
-          className="px-2 py-2 max-sm:trancate bg-blue-600 text-blue-100 hover:text-white text-sm rounded hover:bg-blue-800  flex justify-center items-center   gap-2"
+          className="px-2 py-2 w-full max-sm:trancate bg-blue-600 text-blue-100 hover:text-white text-sm rounded hover:bg-blue-800  flex justify-center items-center gap-2"
         >
           Change Photo
         </button>
@@ -92,10 +92,9 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
         </button>
         <button
           onClick={handleCrop}
-          className="px-20 max-sm:px-8  max-sm:px-8 py-2 bg-blue-500   text-white text-sm rounded hover:bg-blue-800  flex justify-center items-center gap-2 max-sm:gap-1 "
+          className="px-20 max-sm:px-8   py-2 bg-blue-500 text-white text-sm rounded hover:bg-blue-800  gap-2 w-full max-sm:gap-1 "
         >
-          <FaCrop className="font-xl" />{" "}
-          <span className="trancate block">Confirm</span>
+         Crop face
         </button>
       </div>
     </div>

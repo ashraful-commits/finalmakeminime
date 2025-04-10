@@ -70,8 +70,7 @@ const SkinTone = ({ step, setStep, skinTone, setSkinTone }: skinToneType) => {
       filter:
         "invert(45%) sepia(51%) saturate(280%) hue-rotate(340deg) brightness(86%) contrast(88%)", // Light Yellow
     },
-    
-    
+
     {
       id: 13,
       filter:
@@ -137,15 +136,15 @@ const SkinTone = ({ step, setStep, skinTone, setSkinTone }: skinToneType) => {
       filter:
         "invert(8%) sepia(12%) saturate(3712%) hue-rotate(349deg) brightness(98%) contrast(89%)", // Light Yellow
     },
-    
   ];
   const handleConfirm = () => {
     setStep(7);
   };
   return (
-    <div className="max-sm:w-full w-[50%] max-w-md mx-auto flex space-y-3 flex-col items-center justify-between max-sm:justify-center p-6 s">
+    <div className="max-sm:w-full w-[50%] max-w-md mx-auto flex space-y-3 flex-col items-center justify-between max-sm:justify-center p-6 max-sm:px-2 s">
       {/* Section Title and Navigation Buttons */}
-      <h1 className="text-blue-500 text-xl text-center font-bold">choose colour
+      <h1 className="text-blue-500 text-xl text-center font-bold">
+        Choose colour
       </h1>
       <div className="flex gap-4 mb-5 max-sm:mb-0 justify-between items-center w-full">
         <button
@@ -160,45 +159,51 @@ const SkinTone = ({ step, setStep, skinTone, setSkinTone }: skinToneType) => {
         >
           Change Face
         </button>
-       
       </div>
 
       {/* Skin Tone Selection Grid */}
-      <div className="grid grid-cols-4  gap-4 w-full justify-center items-center border p-4 scale-75">
-        {skinTones.map((tone) => (
-          <button
-            key={tone.id}
-            className="w-8 h-8 rounded-full"
-            style={{
-              backgroundColor: "black",
-              filter: tone.filter,
-            }}
-            onClick={() => {
-              setSkinTone(tone.filter),
-                localStorage.setItem("skinTone", tone.filter);
-            }}
-            aria-label={`Select skin tone ${tone.id}`}
-          />
-        ))}
+      <div className="w-full  p-4 max-sm:px-0">
+        <div className="text-center text-sm font-medium mb-2 sm:hidden max-sm:mb-10">
+          Select Skin Tone
+        </div>
+       
+          
+
+          <div className="grid grid-cols-4 gap-4 justify-center items-center sm:grid max-sm:flex max-sm:overflow-x-auto max-sm:gap-3 max-sm:mx-3">
+            {skinTones.map((tone) => (
+              <button
+                key={tone.id}
+                className="w-10 h-10 rounded-full shrink-0 mx-auto"
+                style={{
+                  backgroundColor: "black",
+                  filter: tone.filter,
+                }}
+                onClick={() => {
+                  setSkinTone(tone.filter);
+                  localStorage.setItem("skinTone", tone.filter);
+                }}
+                aria-label={`Select skin tone ${tone.id}`}
+              />
+            ))}
+          </div>
+        
       </div>
 
       {/* Action Buttons */}
       <div className="w-full flex justify-end gap-6 items-center mt-10 max-sm:mt-2">
-      <button
+        <button
           onClick={() => setStep(3)}
-          className="bg-blue-100 bg-opacity-50 border border-blue-500 text-blue-500 hover:text-white text-sm font-light  px-4 py-1 rounded-md  hover:bg-blue-500 focus:outline-none focus:ring-2 "
+          className="bg-blue-100 bg-opacity-50 border border-blue-500 text-blue-500 hover:text-white text-sm font-light  px-4 py-2 rounded-md  hover:bg-blue-500 focus:outline-none focus:ring-2 "
         >
-         
           Back
         </button>
         <button
           onClick={handleConfirm}
-          className="px-20 max-sm:px-8  py-2 bg-blue-500   text-white text-sm rounded hover:bg-blue-800 border flex justify-center items-center gap-2 max-sm:gap-1 "
+          className="px-20 max-sm:px-8 w-full py-2 bg-blue-500   text-white text-sm rounded hover:bg-blue-800 border flex justify-center items-center gap-2 max-sm:gap-1 l"
         >
           <FaCheck className="inline-block mr-2" />
           Confirm
         </button>
-       
       </div>
     </div>
   );

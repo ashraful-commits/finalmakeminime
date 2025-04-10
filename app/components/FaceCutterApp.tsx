@@ -161,7 +161,7 @@ const FaceCutterApp = ({ faceImage, setStep, setCropedImage, step }) => {
         </div>
       )}
 
-      <div className="flex justify-center  gap-4 mb-6 mt-20 max-sm:mt-0 max-sm:sticky bottom-0 left-0">
+      <div className="flex justify-center  gap-4 mb-6 mt-20 max-sm:mt-0 max-sm:sticky bottom-0 left-0 w-full">
         <button
           onClick={handleBack}
           className="px-4 py-1 text-sm  rounded-md bg-blue-100  hover:bg-blue-700 text-blue-500 bg-opacity-50 border hover:text-white border-blue-500 font-medium flex items-center justify-center "
@@ -173,7 +173,7 @@ const FaceCutterApp = ({ faceImage, setStep, setCropedImage, step }) => {
           <button
             // onClick={handleRemoveBg}
             onClick={handleFaceCut}
-            className="px-20 max-sm:px-8  py-2 bg-blue-500   text-white text-sm rounded hover:bg-blue-800 border flex justify-center items-center gap-2 max-sm:gap-1 "
+            className="px-20 max-sm:px-8  py-2 bg-blue-500   text-white text-sm rounded hover:bg-blue-800 border flex justify-center items-center gap-2 max-sm:gap-1 w-full"
           >
             {removeLoader ? (
               <AiOutlineLoading3Quarters className="animate-spin" />

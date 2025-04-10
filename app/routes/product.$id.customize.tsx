@@ -307,7 +307,7 @@ export default function ProductIdCustomize() {
         <div className="loader w-full h-screen flex gap-3 flex-col justify-center items-center">
           <img src="/images/happiness.png" alt="" />
           <p>Let's get this Started...</p>
-          <p>Personalisation Tool is Loading</p>
+          <p className="font-bold text-blue-500">Personalisation Tool is Loading</p>
         </div>
       ) : (
         <>
@@ -462,7 +462,7 @@ export default function ProductIdCustomize() {
                             <IoClose className="text-sm" />
                           </button>
                           <img
-                            className="w-20 h-20 object-contain rounded"
+                            className="w-20 h-20 max-sm:w-10 max-sm:h-10 object-contain rounded"
                             src={item}
                             alt={`Uploaded ${index + 1}`}
                           />
