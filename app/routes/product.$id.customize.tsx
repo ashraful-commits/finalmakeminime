@@ -348,7 +348,7 @@ export default function ProductIdCustomize() {
           </div>
 
           {/* Main Section */}
-          <div className="w-full flex gap-2 max-sm:flex-col justify-center items-center min-h-[80vh]">
+          <div className="w-full flex gap-2 max-sm:flex-col justify-between items-center min-h-[80vh]">
             {/* Left Section - Image Preview */}
             <ImageEditor2
               faceImage={faceImage}
@@ -382,7 +382,7 @@ export default function ProductIdCustomize() {
             )}
 
             {uploadedPhoto && step == 1 && (
-              <div className="w-[50%] max-h-[50vh] max-sm:w-full flex flex-col items-center justify-center relative">
+              <div className="w-[50%] max-h-[50vh] max-sm:w-full flex flex-col items-center justify-between relative">
                 {uploadedPhoto && (
                   <ImageCropper
                     src={uploadedPhoto}
@@ -462,7 +462,7 @@ export default function ProductIdCustomize() {
                             <IoClose className="text-sm" />
                           </button>
                           <img
-                            className="w-20 h-20 object-cover rounded"
+                            className="w-20 h-20 object-contain rounded"
                             src={item}
                             alt={`Uploaded ${index + 1}`}
                           />

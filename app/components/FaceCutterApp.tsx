@@ -130,11 +130,11 @@ const FaceCutterApp = ({ faceImage, setStep, setCropedImage, step }) => {
 
   return (
     <div
-      className={`w-[50%] max-sm:w-full flex space-y-10  flex-col items-center justify-center border-gray-300 lg:border-r md:border-r max-sm:border-none min-h-[80vh] p-4 bg-white max-sm:space-y-6   rounded-lg relative ${
+      className={`w-[50%] max-sm:w-full flex space-y-10  flex-col items-center justify-between border-gray-300 lg:border-r md:border-r max-sm:border-none min-h-[80vh] p-4 bg-white max-sm:space-y-6   rounded-lg relative ${
         step !== 7 ? " max-sm:min-h-[90vh]" : ""
       }`}
     >
-      <h2 className="text-xl font-semibold text-center text-gray-800 mb-6">
+      <h2 className="text-xl font-semibold text-center text-blue-500 mb-6">
         Cutout
       </h2>
       {error && <p className="text-red-500 text-sm">{error}</p>}
@@ -164,16 +164,16 @@ const FaceCutterApp = ({ faceImage, setStep, setCropedImage, step }) => {
       <div className="flex justify-center  gap-4 mb-6 mt-20 max-sm:mt-0 max-sm:sticky bottom-0 left-0">
         <button
           onClick={handleBack}
-          className="px-2 py-1 text-sm  rounded-md bg-gray-100  hover:bg-gray-700 text-gray-500 bg-opacity-50 border hover:text-white border-gray-500 font-medium flex items-center justify-center "
+          className="px-4 py-1 text-sm  rounded-md bg-blue-100  hover:bg-blue-700 text-blue-500 bg-opacity-50 border hover:text-white border-blue-500 font-medium flex items-center justify-center "
         >
-          <IoArrowBackOutline className="mr-2" /> Back
+           Back
         </button>
 
         {!removeBG && (
           <button
             // onClick={handleRemoveBg}
             onClick={handleFaceCut}
-            className="px-8 py-2 bg-blue-500   text-white text-sm rounded hover:bg-blue-800 border flex justify-center items-center gap-2 max-sm:gap-1 "
+            className="px-20 py-2 bg-blue-500   text-white text-sm rounded hover:bg-blue-800 border flex justify-center items-center gap-2 max-sm:gap-1 "
           >
             {removeLoader ? (
               <AiOutlineLoading3Quarters className="animate-spin" />

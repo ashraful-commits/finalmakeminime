@@ -65,7 +65,8 @@ function ImagePreview({ croppedImage, setStep, setCropedImage,step,setFaceImage 
   };
 
   return (
-    <div className={`flex w-[50%] max-sm:w-full flex-col items-center justify-center p-6 space-y-6 ${step !==7 ? " max-sm:max-h-[90vh] max-sm:h-[90vh] " : ""}`}>
+    <div className={`flex w-[50%] max-sm:w-full flex-col items-center justify-between p-6 space-y-6 ${step !==7 ? " max-sm:max-h-[90vh] max-sm:h-[90vh] " : ""}`}>
+      <h1 className="text-blue-500 text-xl font-bold">Edit Brightness</h1>
       {croppedImage && (
         <>
           <div
@@ -140,14 +141,14 @@ function ImagePreview({ croppedImage, setStep, setCropedImage,step,setFaceImage 
             <div className="flex justify-center mt-6 gap-2">
               <button
                 onClick={handleBack}
-                className="px-3 text-sm py-2 bg-gray-200 bg-opacity-50 text-gray-700 rounded-lg border border-gray-800 focus:outline-none focus:ring-2 hover:bg-gray-700 focus:ring-gray-500 hover:text-white"
+                className="px-4 text-sm py-2 bg-blue-200 bg-opacity-50 text-blue-700 rounded-lg border border-blue-800 focus:outline-none focus:ring-2 hover:bg-blue-700 focus:ring-blue-500 hover:text-white"
               >
-                <AiOutlineArrowLeft className="inline-block mr-2" />
+             
                 Back
               </button>
               <button
                 onClick={handleSave}
-                className="px-8 py-2 bg-blue-500   text-white text-sm rounded hover:bg-blue-800 border flex justify-center items-center gap-2 max-sm:gap-1 "
+                className="px-20 py-2 bg-blue-500   text-white text-sm rounded hover:bg-blue-800 border flex justify-center items-center gap-2 max-sm:gap-1 "
               >
                 <AiOutlineCheck className="inline-block mr-2" />
                 Confirm

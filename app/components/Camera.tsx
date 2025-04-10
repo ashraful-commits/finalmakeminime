@@ -50,7 +50,7 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
         onClick={handleBack}
         className="mt-4 px-4 py-2 flex items-center gap-2 bg-blue-300 border border-blue-500 hover:text-white rounded-lg text-blue-500 hover:bg-blue-500 bg-opacity-50 transition duration-300 text-sm font-light"
       >
-        <FaArrowLeft /> Back to upload
+         Back to upload
       </button>
     </div>
   );

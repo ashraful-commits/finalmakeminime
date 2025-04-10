@@ -319,7 +319,7 @@ const ImageEditor = ({
 
   return (
     <div
-      className={` flex-col border-r border-r-gray-500 max-sm:border-r-0 items-center justify-center w-[50%] max-sm:w-full max-sm:border-b z-0 lg:min-h-[80vh] max-sm:min-h-[400px]  md:min-h-[80vh] ${
+      className={` flex-col border-r border-r-gray-500 max-sm:border-r-0 items-center justify-between w-[50%] max-sm:w-full max-sm:border-b z-0 lg:min-h-[80vh] max-sm:min-h-[400px]  md:min-h-[80vh] ${
         step === 0 || step === 4 || step === 7 || step === 8
           ? "flex"
           : "max-sm:hidden"
@@ -406,7 +406,7 @@ const ImageEditor = ({
                 touchAction: "none",
                 userSelect: "none",
                 margin: "0 auto",
-                zIndex: 100,
+                zIndex: 10000,
               }}
               className=" w-full"
             >
@@ -453,7 +453,7 @@ const ImageEditor = ({
                   <>
                     <div
                       // Move Handle
-                      className="flex justify-center items-center"
+                      className="flex justify-center items-center scale-120"
                       role="button" // Add a role attribute to indicate that it's a interactive element
                       tabIndex={0} // Add tabIndex to make it focusable
                       style={{
@@ -486,7 +486,7 @@ const ImageEditor = ({
                         }
                       }} // Add support for keyboard input
                     >
-                      <IoMove className="text-xl text-blue-50" />
+                      <IoMove className="text-md text-blue-50" />
                     </div>
 
                     <div
@@ -506,7 +506,7 @@ const ImageEditor = ({
                         transform: `rotate(${-transform.rotation}deg)`,
                         transition: "background-color 0.2s, transform 0.3s",
                       }}
-                      className="flex items-center justify-center"
+                      className="flex items-center justify-center  scale-120"
                       onMouseDown={(e) => {
                         e.stopPropagation(),
                           handleStart("rotate", e.clientX, e.clientY);
@@ -524,7 +524,7 @@ const ImageEditor = ({
                         }
                       }} // Add support for keyboard input
                     >
-                      <FaArrowsRotate className="text-lg text-blue-50" />
+                      <FaArrowsRotate className="text-sm text-blue-50" />
                     </div>
                     <div
                       // Rotate Handle
@@ -545,7 +545,7 @@ const ImageEditor = ({
                         border: "1px solid #3b82f6",
                         transition: "background-color 0.2s, transform 0.3s",
                       }}
-                      className="flex items-center justify-center"
+                      className="flex items-center justify-center  scale-120"
                       // Add support for keyboard input
                     ></div>
                     <div
@@ -577,7 +577,7 @@ const ImageEditor = ({
                             e.touches[0].clientY
                           );
                       }}
-                      className="flex justify-center items-center "
+                      className="flex justify-center items-center  scale-120"
                       onKeyDown={(e) => {
                         // Add support for keyboard input
                         if (e.key === "Enter" || e.key === " ") {
@@ -586,7 +586,7 @@ const ImageEditor = ({
                       }}
                     >
                       {" "}
-                      <IoResize className="text-blue-50 text-xl rotate-90" />{" "}
+                      <IoResize className="text-blue-50 text-md rotate-90" />{" "}
                     </div>
                   </>
                 )}

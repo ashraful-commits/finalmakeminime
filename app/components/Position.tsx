@@ -73,8 +73,8 @@ const zoomOut = () => {
     setStep(3);
   };
   return (
-    <div className="controls mt-1  w-[50%] max-w-4xl max-sm:max-w-full space-y-10">
-      <h1 className="text-bule-500 text-lg font-bold my-5 text-center">Position Face</h1>
+    <div className="controls mt-1  w-[50%] max-w-4xl max-sm:max-w-full space-y-10 flex flex-col justify-between items-center">
+      <h1 className="text-bule-500 text-lg font-bold my-5 text-center text-blue-500">Position Face</h1>
       <h2 className="text-center max-sm:my-5 my-10 text-lg max-sm:text-sm font-bold w-full">Useing the tools below position the face on the items correctly</h2>
       <div className="flex gap-10  justify-center items-center max-sm:gap-4 max-sm:flex max-sm:justify-center">
         <div className="flex flex-col justify-center items-center gap-y-3 order-2">
@@ -144,14 +144,14 @@ const zoomOut = () => {
       </div>
       <div className="flex justify-end items-center min-w-80 max-sm:min-w-40 gap-3 mt-5 max-sm:mb-2">
         <button
-          className="px-3 text-sm py-2 bg-gray-200 bg-opacity-50 text-gray-700 rounded-lg border border-gray-800 focus:outline-none focus:ring-2 hover:bg-gray-700 focus:ring-gray-500 hover:text-white flex justify-center items-center gap-2"
+          className="px-4 text-sm py-2 bg-blue-200 bg-opacity-50 text-blue-700 rounded-lg border border-blue-800 focus:outline-none focus:ring-2 hover:bg-blue-700 focus:ring-blue-500 hover:text-white flex justify-center items-center gap-2"
           onClick={handleBack}
         >
           {" "}
-          <FaArrowLeft /> <span className="inline-block">Back</span>
+           <span className="inline-block">Back</span>
         </button>
         <button
-          className="px-8 py-2 bg-blue-500   text-white text-sm rounded hover:bg-blue-800 border flex justify-center items-center gap-2 max-sm:gap-1 "
+          className="px-20 py-2 bg-blue-500   text-white text-sm rounded hover:bg-blue-800 border flex justify-center items-center gap-2 max-sm:gap-1 "
           onClick={handleConfirm}
         >
           <FaCheck /> <span className="inline-block">Confirm</span>
