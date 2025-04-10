@@ -176,10 +176,10 @@ export default function ProductIdCustomize() {
   const [scale, setScale] = useState(0.7);
   const [step, setStep] = useState<number>(0);
   const [transform, setTransform] = useState({
-    x: 150,
-    y: 100,
-    width: 200,
-    height: 200,
+    x: 130,
+    y: 50,
+    width: 300,
+    height: 300,
     rotation: 0,
     aspectRatio: 1,
     zoom: 1,
@@ -420,7 +420,7 @@ export default function ProductIdCustomize() {
                   </button>
                 </div>
 
-                <div className="w-full  flex flex-col items-center justify-center">
+                <div className="w-full  flex flex-col items-center justify-center text-[#646464]">
                   <span className="mt-5 text-sm font-light ">
                     For any tips follow our guide{" "}
                     <a className="hover:underline text-blue-900" href="/here">
@@ -428,7 +428,7 @@ export default function ProductIdCustomize() {
                     </a>
                   </span>
 
-                  <p className="mt-10 max-sm:mt-2 text-md text-gray-500">
+                  <p className="mt-10 max-sm:mt-2 text-sm text-[#696969]">
                     You have {images.length} uploaded{" "}
                     {images.length === 1 ? "image" : "images"}
                   </p>
@@ -437,10 +437,10 @@ export default function ProductIdCustomize() {
                   <div className="w-full px-5 mt-10 max-sm:mt-3">
                     {images.length > 0 && (
                       <div className="flex justify-between items-center">
-                        <h6 className="font-semibold">Uploaded Images</h6>
+                        <h6 className="font-semibold text-[#000000]">Uploaded Images</h6>
                         {images.length > 0 && (
                           <button
-                            className="text-blue-500 underline font-semibold"
+                            className="text-[#007ee5] underline font-semibold"
                             onClick={handleClearPhotos}
                           >
                             Clear photos

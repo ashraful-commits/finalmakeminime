@@ -343,22 +343,20 @@ const ImageEditor = ({
             <div
               ref={canvasRef}
               style={{
-                position: "relative",
-                width: "100%",
-                maxWidth: "557px",
+                position: "absolute",
                 height: "800px",
                 maxHeight: "800px",
                 touchAction: "none",
                 userSelect: "none",
                 overflow: "hidden",
                 margin: "0 auto",
-                zIndex:100,
+                zIndex: 30,
               }}
+              className=" w-full"
             >
               {/* Main Element */}
               <div
                 role="button"
-                
                 tabIndex={-3}
                 style={{
                   position: "absolute",
@@ -366,29 +364,82 @@ const ImageEditor = ({
                   top: transform.y,
                   width: transform.width * transform.zoom,
                   height: transform.height * transform.zoom,
-                  transform: `rotate(${transform.rotation}deg)`,
                   transition: isDragging
                     ? "none"
                     : "all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28)",
                   transformOrigin: "center center",
                   willChange: "transform, width, height",
-                  border:
-                    step === 4 ? "2px solid skyblue" : "none",
-                  scale:"150%",
+                  zIndex: 30,
+
+                }}
+                
+              >
+                <img
+                  src={defaultFaceImage}
+                  style={{
+                    width: "auto",
+                    height: "100%",
+                    transform: `rotate(${transform.rotation}deg)`,
+                    transformOrigin: "center",
+                    zIndex: 30,
+                  }}
+                  className=" w-auto h-full mx-auto"
+                  alt=""
+                />
+                
+              </div>
+            </div>
+          ) : (
+            <img
+              className="top-10 absolute max-h-[350px] z-40 max-sm:scale-90"
+              src={"/images/Layer_40_face_preview.png"}
+              alt="face preview"
+            />
+          )}
+ {faceImage && (
+            <div
+              ref={canvasRef}
+              style={{
+                position: "absolute",
+                height: "800px",
+                maxHeight: "800px",
+                touchAction: "none",
+                userSelect: "none",
+                margin: "0 auto",
+                zIndex: 100,
+              }}
+              className=" w-full"
+            >
+              {/* Main Element */}
+              <div
+                role="button"
+                tabIndex={-3}
+                style={{
+                  position: "absolute",
+                  left: transform.x,
+                  top: transform.y,
+                  width: transform.width * transform.zoom,
+                  height: transform.height * transform.zoom,
+                  transition: isDragging
+                    ? "none"
+                    : "all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28)",
+                  transformOrigin: "center center",
+                  willChange: "transform, width, height",
+                  border: step === 4 ? "2px solid #3b82f6" : "none",
                   outline: step === 4 ? "2px solid white" : "none",
-                  zIndex:60 
+                  zIndex: 100,
                 }}
                 onMouseDown={(e) => {
-                  e.stopPropagation(),
-                    handleStart("move", e.clientX, e.clientY);
+                  e.stopPropagation();
+                  handleStart("move", e.clientX, e.clientY);
                 }}
                 onTouchStart={(e) => {
-                  e.stopPropagation(),
-                    handleStart(
-                      "move",
-                      e.touches[0].clientX,
-                      e.touches[0].clientY
-                    );
+                  e.stopPropagation();
+                  handleStart(
+                    "move",
+                    e.touches[0].clientX,
+                    e.touches[0].clientY
+                  );
                 }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" || e.key === " ") {
@@ -396,7 +447,7 @@ const ImageEditor = ({
                   }
                 }}
               >
-                <img src={defaultFaceImage}  style={{ width: '100%', height: '100%',zIndex:30,position:"absolute",objectFit:"cover" }} className="w-full absolute z-40 h-full  object-cover " alt="" />
+               
                 {/* Handles */}
                 {step === 4 && (
                   <>
@@ -414,7 +465,6 @@ const ImageEditor = ({
                         backgroundColor: "#3b82f6",
                         cursor: "move",
                         borderRadius: "50%",
-                        boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
                         touchAction: "none",
                         transition: "background-color 0.2s",
                       }}
@@ -441,8 +491,8 @@ const ImageEditor = ({
 
                     <div
                       // Rotate Handle
-                      role="button" // Add a role attribute to indicate that it's a button
-                      tabIndex={0} // Add tabIndex to make it focusable
+                      role="button"
+                      tabIndex={0}
                       style={{
                         position: "absolute",
                         top: -28,
@@ -452,7 +502,6 @@ const ImageEditor = ({
                         backgroundColor: "#3b82f6",
                         cursor: "grab",
                         borderRadius: "50%",
-                        boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
                         touchAction: "none",
                         transform: `rotate(${-transform.rotation}deg)`,
                         transition: "background-color 0.2s, transform 0.3s",
@@ -493,13 +542,12 @@ const ImageEditor = ({
                         boxShadow: "0 2px 4px rgba(0,0,0,0.2)",
                         touchAction: "none",
                         transform: `rotate(${-transform.rotation}deg)`,
-                        border: "2px solid #3b82f6",
+                        border: "1px solid #3b82f6",
                         transition: "background-color 0.2s, transform 0.3s",
                       }}
                       className="flex items-center justify-center"
-                     // Add support for keyboard input
-                    >
-                    </div>
+                      // Add support for keyboard input
+                    ></div>
                     <div
                       // Resize Handle
                       role="button" // Add a role attribute to indicate that it's a button
@@ -544,14 +592,7 @@ const ImageEditor = ({
                 )}
               </div>
             </div>
-          ) : (
-            <img
-              className="top-10 absolute max-h-[350px] z-40 max-sm:scale-90"
-              src={"/images/Layer_40_face_preview.png"}
-              alt="face preview"
-            />
-          )}
-
+          ) }
           {/* Other Layers */}
           <canvas
             ref={canvasSkinToneRef}
@@ -560,12 +601,12 @@ const ImageEditor = ({
             className="absolute z-1 h-full "
           />
           <canvas
-          style={{zIndex:50}}
+            style={{ zIndex: 50 }}
             ref={canvasTransparentRef}
             width={"557px"}
             height={"800px"}
-            className="absolute  h-full z-50 pointer-events-none"
-          />
+            className="absolute  h-full z-50 pointer-events-none overflow-hidden"
+          /> 
           <canvas
             ref={canvasBodyRef}
             width={"557px"}

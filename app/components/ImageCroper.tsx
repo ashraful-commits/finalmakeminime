@@ -65,10 +65,15 @@ const ImageCropper: React.FC<ImageCropperProps> = ({
         step !== 7 ? " max-sm:min-h-[100vh]" : ""
       }`}
     >
+
+<h1 className="my-5 text-blue-500 text-lg font-bold">Select Your Face</h1>
+
+<p className="text-gray-500 text-sm my-2 text-center">Before cropping, take a moment to zoom in on your face for a precise selection. This ensures a perfect fit!</p>
       <Cropper
+       autoZoom={true}
         ref={cropperRef}
         src={src}
-        className={className || "w-full h-96 border border-gray-300"}
+        className={className || "w-full h-96 min-h-[500px] border border-gray-300"}
       />
 
       {/* Controls */}

@@ -141,7 +141,7 @@ const FaceCutterApp = ({ faceImage, setStep, setCropedImage, step }) => {
       {removeLoader && <p className="text-blue-500 text-lg max-sm:text-sm">We're Cutting Out Your Face...
         </p>}
       {!removeBG && (
-        <div className="relative  h-[35vh] max-sm:h-[350px] flex justify-center items-center w-[50%]">
+        <div className="relative  h-[35vh] max-sm:h-[300px] max-sm:min-w-[90%] flex justify-center items-center w-[50%]">
           <div className="absolute top-0 left-0 w-10 h-10 border-t-[6px] border-l-[6px] border-blue-500"></div>
 
           {/* Top-right corner */}

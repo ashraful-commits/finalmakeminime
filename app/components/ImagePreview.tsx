@@ -69,7 +69,7 @@ function ImagePreview({ croppedImage, setStep, setCropedImage,step,setFaceImage 
       {croppedImage && (
         <>
           <div
-            className="relative max-w-xs max-h-xs flex justify-center items-center overflow-hidden"
+            className="relative max-w-xs max-h-xs flex justify-center items-center overflow-hidden max-sm:min-h-[350px] max-sm:mt-5"
             style={{
               transform: `rotate(${rotation}deg) scale(${zoom / 100})`,
               filter: `brightness(${brightness}%) contrast(${contrast}%)`,
@@ -77,7 +77,7 @@ function ImagePreview({ croppedImage, setStep, setCropedImage,step,setFaceImage 
             }}
           >
             <img
-              className="object-contain w-[100%] h-full"
+              className="object-contain w-[100%] h-full max-h-40 min-h-40  max-sm:w-full max-sm:h-full"
               src={croppedImage}
               alt="Cropped"
             />
