@@ -167,7 +167,7 @@ const FaceCutterApp = ({ faceImage, setStep, setCropedImage, step }) => {
       <div className="flex justify-center  gap-4 mb-6 mt-20 max-sm:mt-0 max-sm:sticky bottom-0 left-0 w-full">
         <button
           onClick={handleBack}
-          className="px-4 py-3 text-sm  rounded-md bg-blue-100  hover:bg-blue-700 text-blue-500 bg-opacity-50 border hover:text-white border-blue-500 font-medium flex items-center justify-center "
+          className="px-10 py-3 text-sm  rounded-md bg-blue-100  hover:bg-blue-700 text-blue-500 bg-opacity-50 border hover:text-white border-blue-500 font-medium flex items-center justify-center "
         >
            Back
         </button>

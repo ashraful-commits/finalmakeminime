@@ -212,7 +212,7 @@ const SkinTone = ({ step, setStep, skinTone, setSkinTone }: skinToneType) => {
         <ButtonBox >
           <button
             onClick={() => setStep(3)}
-            className="bg-blue-100 bg-opacity-50 border border-blue-500 text-blue-500 hover:text-white text-sm font-light  px-4 py-3 rounded-md  hover:bg-blue-500 focus:outline-none focus:ring-2 "
+            className="bg-blue-100 bg-opacity-50 border border-blue-500 text-blue-500 hover:text-white text-sm font-light  px-10 py-3 rounded-md  hover:bg-blue-500 focus:outline-none focus:ring-2 "
           >
             Back
           </button>

@@ -50,7 +50,7 @@ const CameraComponent: React.FC<CameraComponentProps> = ({
       </ContainerBox>
       <ButtonBox><button
         onClick={handleBack}
-        className="mt-4 px-4 py-3 flex items-center gap-2 bg-blue-500 border  text-white rounded-lg hover:bg-blue-600 transition duration-300 text-md font-bold"
+        className="mt-4 px-10 py-3 flex items-center gap-2 bg-blue-500 border  text-white rounded-lg hover:bg-blue-600 transition duration-300 text-md font-bold"
       >
          Back to upload
       </button></ButtonBox>

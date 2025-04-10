@@ -222,7 +222,7 @@ const Position = ({ setStep, setTransform }) => {
         </div>
         <ButtonBox>
           <button
-            className="px-4 text-sm py-2 bg-blue-200 bg-opacity-50 text-blue-700 rounded-lg border border-blue-800 focus:outline-none focus:ring-2 hover:bg-blue-700 focus:ring-blue-500 hover:text-white flex justify-center items-center gap-2"
+            className="px-10 text-sm py-3 bg-blue-200 bg-opacity-50 text-blue-700 rounded-lg border border-blue-800 focus:outline-none focus:ring-2 hover:bg-blue-700 focus:ring-blue-500 hover:text-white flex justify-center items-center gap-2"
             onClick={handleBack}
           >
             {" "}
