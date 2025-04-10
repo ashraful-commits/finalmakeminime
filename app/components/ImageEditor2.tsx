@@ -247,13 +247,13 @@ const ImageEditor = ({
   // Responsive container sizing
   useEffect(() => {
     const handleResize = () => {
-      if(step===4){
+      if (step === 4) {
         const bounds = getContainerBounds();
-      setTransform((prev) => ({
-        ...prev,
-        x: Math.min(prev.x, bounds.width - prev.width),
-        y: Math.min(prev.y, bounds.height - prev.height),
-      }));
+        setTransform((prev) => ({
+          ...prev,
+          x: Math.min(prev.x, bounds.width - prev.width),
+          y: Math.min(prev.y, bounds.height - prev.height),
+        }));
       }
     };
 
@@ -432,13 +432,13 @@ const ImageEditor = ({
                 }}
                 onMouseDown={(e) => {
                   e.stopPropagation();
-                  if(step===4){
+                  if (step === 4) {
                     handleStart("move", e.clientX, e.clientY);
                   }
                 }}
                 onTouchStart={(e) => {
                   e.stopPropagation();
-                  if(step===4){
+                  if (step === 4) {
                     handleStart(
                       "move",
                       e.touches[0].clientX,
@@ -447,9 +447,8 @@ const ImageEditor = ({
                   }
                 }}
                 onKeyDown={(e) => {
-                  e.stopPropagation()
-                  if(step===4){
-
+                  e.stopPropagation();
+                  if (step === 4) {
                     if (e.key === "Enter" || e.key === " ") {
                       handleStart("move", e.clientX, e.clientY);
                     }
@@ -478,15 +477,14 @@ const ImageEditor = ({
                         transition: "background-color 0.2s",
                       }}
                       onMouseDown={(e) => {
-                        e.stopPropagation()
-                        if(step===4){
-
+                        e.stopPropagation();
+                        if (step === 4) {
                           handleStart("move", e.clientX, e.clientY);
                         }
                       }}
                       onTouchStart={(e) => {
-                        e.stopPropagation()
-                        if(step===4){
+                        e.stopPropagation();
+                        if (step === 4) {
                           handleStart(
                             "move",
                             e.touches[0].clientX,
@@ -495,8 +493,8 @@ const ImageEditor = ({
                         }
                       }}
                       onKeyDown={(e) => {
-                        e.stopPropagation()
-                        if(step===4){
+                        e.stopPropagation();
+                        if (step === 4) {
                           if (e.key === "Enter" || e.key === " ") {
                             handleStart("move", e.clientX, e.clientY);
                           }

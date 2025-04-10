@@ -89,13 +89,13 @@ const zoomOut = () => {
               onClick={rotateRight }
               className="text-gray-600  px-2 py-1 text-xl rounded-md  flex items-center gap-2 max-sm:flex-col max-sm:scale-75 scale-110  "
             >
-              <FaRotateRight className="inline-block text-lg font-light max-sm:text-2xl text-gray-400" />
+              <FaRotateRight className="inline-block text-lg font-light max-sm:text-2xl text-gray-500" />
             </button>
             <button
               onClick={rotateLeft}
               className="text-gray-600  px-2 py-1 text-xl rounded-md  flex items-center gap-2  max-sm:flex-col max-sm:scale-75 scale-110 "
             >
-              <FaRotateLeft className="inline-block text-lg font-light max-sm:text-2xl text-gray-400" />
+              <FaRotateLeft className="inline-block text-lg font-light max-sm:text-2xl text-gray-500" />
             </button>
           </div>
         </div>
@@ -136,13 +136,13 @@ const zoomOut = () => {
               onClick={zoomIn}
               className=" text-gray-500 px-2 py-1 text-xl rounded-md hover:text-gray-700 flex items-center gap-2 max-sm:flex-col max-sm:scale-75"
             >
-              <FaPlus className="inline-block text-lg font-light max-sm:text-2xl text-gray-400" />
+              <FaPlus className="inline-block text-lg font-light max-sm:text-2xl text-gray-500" />
             </button>
             <button
               onClick={zoomOut}
               className=" text-gray-500 px-2 py-1 text-xl rounded-md hover:text-gray-700 flex items-center gap-2 max-sm:flex-col max-sm:scale-75"
             >
-              <FaMinus className="inline-block text-lg font-light max-sm:text-2xl text-gray-400" />
+              <FaMinus className="inline-block text-lg font-light max-sm:text-2xl text-gray-500" />
             </button>
           </div>
         </div>
