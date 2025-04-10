@@ -316,7 +316,8 @@ const ImageEditor = ({
       setLoading(false);
     }
   };
-
+const dynamicX = transform.x
+const dynamicY = transform.y
   return (
     <div
       className={` flex-col border-r border-r-gray-500 max-sm:border-r-0 items-center justify-center w-[50%] max-sm:w-full max-sm:border-b z-0 lg:min-h-[80vh] max-sm:min-h-[450px]  md:min-h-[80vh] ${
@@ -360,8 +361,8 @@ const ImageEditor = ({
                 tabIndex={-3}
                 style={{
                   position: "absolute",
-                  left: transform.x,
-                  top: transform.y,
+                  left: step===4? transform.x:dynamicX,
+                  top:step===4? transform.y: dynamicY,
                   width: transform.width * transform.zoom,
                   height: transform.height * transform.zoom,
                   transition: isDragging
@@ -416,8 +417,8 @@ const ImageEditor = ({
                 tabIndex={-3}
                 style={{
                   position: "absolute",
-                  left: transform.x,
-                  top: transform.y,
+                  left: step===4? transform.x:dynamicX,
+                  top:step===4? transform.y: dynamicY,
                   width: transform.width * transform.zoom,
                   height: transform.height * transform.zoom,
                   transition: isDragging
