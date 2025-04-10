@@ -322,7 +322,7 @@ const ImageEditor = ({
   const dynamicY = transform.y;
   return (
     <div
-      className={` ${step === 4 &&"max-sm:fixed max-sm:top-1/2 max-sm:left-1/2 max-sm:transform max-sm:-translate-x-1/2 max-sm:-translate-y-1/2"} ${ step === 8 &&"max-sm:fixed max-sm:top-1/2 max-sm:left-1/2 max-sm:transform max-sm:-translate-x-1/2 max-sm:-translate-y-1/2"} flex-col border-r border-r-gray-500 max-sm:border-r-0 items-center justify-center w-[50%] max-sm:w-full max-sm:border-b z-0 lg:min-h-[80vh] max-sm:min-h-[450px]  md:min-h-[80vh] ${
+      className={` ${step === 4 &&"max-sm:fixed max-sm:top-1/2 max-sm:left-1/2 max-sm:transform max-sm:-translate-x-1/2 max-sm:-translate-y-1/2"} ${ step === 8 &&"max-sm:fixed max-sm:top-1/2 max-sm:left-1/2 max-sm:transform max-sm:-translate-x-1/2 max-sm:-translate-y-1/2"} ${step === 7 &&"max-sm:fixed max-sm:top-1/2 max-sm:left-1/2 max-sm:transform max-sm:-translate-x-1/2 max-sm:-translate-y-1/2"} flex-col border-r border-r-gray-500 max-sm:border-r-0 items-center justify-center w-[50%] max-sm:w-full max-sm:border-b z-0 lg:min-h-[80vh] max-sm:min-h-[450px]  md:min-h-[80vh] ${
         step === 0 || step === 4 || step === 7 || step === 8
           ? "flex"
           : "max-sm:hidden"
@@ -634,7 +634,7 @@ const ImageEditor = ({
       {/* Controls */}
       {step === 7 && (
         <>
-          <div className="flex gap-4  absolute  right-10 bottom-1   ">
+          <div className="flex gap-4  fixed  right-10 bottom-2 z-500   ">
             <button
               onClick={() => handleAddToCart(productId, faceImage)}
               className="bg-green-600 text-white px-6 py-3 flex justify-center items-center rounded-md text-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500"

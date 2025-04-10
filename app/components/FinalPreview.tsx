@@ -1,5 +1,6 @@
 import React from "react";
 import { FaPlus } from "react-icons/fa";
+import ContainerBox from "./ContainerBox";
 
 interface FinalPreviewProps {
   croppedImage?: string;
@@ -24,11 +25,13 @@ const FinalPreview: React.FC<FinalPreviewProps> = ({
   };
   return (
     <div
-      className={`lg:w-[50%] md:w-[50%]  max-sm:w-full max-sm:flex justify-between max-sm:justify-center lg:flex lg:flex-col md:flex md:flex-col lg:items-start md:items-start max-sm:items-center  space-y-4 min-h-full px-2 max-sm:mb-20 max-sm:gap-5 ${
-        step !== 7 ? " max-sm:min-h-[95vh]" : ""
-      }`}
+      className={`w-[50%]  max-sm:w-full flex justify-between   flex-col  min-h-[90vh]   px-2  `}
     >
-      {croppedImage && (
+     <ContainerBox>
+      <div className="grid grid-cols-3 gap-3 justify-center items-center max-w-lg max-sm:w-full">
+
+      
+     {croppedImage && (
         <div className="flex justify-start max-sm:justify-center items-center gap-3 max-sm:flex-col max-sm:gap-1">
           <p className="text-blue-500 text-lg max-sm:text-sm text-start max-sm:mt-3">Face</p>
           <button className="cursor-pointer hover:outline-1" onClick={handleEdit}><img className="w-20 h-auto max-sm:w-10 " src={croppedImage} alt="Cropped face" /></button>
@@ -49,6 +52,9 @@ const FinalPreview: React.FC<FinalPreviewProps> = ({
       >
         <FaPlus /> Add face
       </button>
+      </div>
+     </ContainerBox>
+    
     </div>
   );
 };

@@ -78,7 +78,7 @@ const Position = ({ setStep, setTransform }) => {
     setStep(3);
   };
   return (
-    <div className="controls mt-1 max-sm:w-full w-[50%] max-w-4xl max-sm:max-w-full  space-y-10 flex flex-col justify-between min-h-[90vh] -  items-center">
+    <div className="controls  max-sm:w-full w-[50%] flex flex-col justify-between min-h-[90vh] items-center">
       <h1 className="text-bule-500 text-lg font-bold my-5 text-center text-blue-500">
         Position Face
       </h1>

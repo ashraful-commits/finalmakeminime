@@ -143,7 +143,7 @@ const SkinTone = ({ step, setStep, skinTone, setSkinTone }: skinToneType) => {
     setStep(7);
   };
   return (
-    <div className="max-sm:w-full w-[50%]  mx-auto flex space-y-3 flex-col items-center justify-between  px-2 max-sm:px-2 min-h-[90vh] - ">
+    <div className="max-sm:w-full  w-[50%]  mx-auto flex flex-col items-center justify-between  px-2 max-sm:px-2 min-h-[90vh] - ">
       {/* Section Title and Navigation Buttons */}
       <h1 className="text-blue-500 text-xl text-center font-bold">
         Choose colour
@@ -190,8 +190,8 @@ const SkinTone = ({ step, setStep, skinTone, setSkinTone }: skinToneType) => {
       
       {/* Skin Tone Selection Grid */}
       
-      <div className="flex flex-col justify-center items-center w-full ">
-        <div className="max-sm:flex justify-center items-center my-2 overflow-x-auto max-w-[360px] p-2 gap-2 hidden ">
+      <div className="flex flex-col  justify-center items-center w-full ">
+        <div className="max-sm:flex justify-center items-center my-2 overflow-x-auto max-w-[320px] p-2 gap-2 hidden ">
           {skinTones.map((tone) => (
             <button
               key={tone.id}
