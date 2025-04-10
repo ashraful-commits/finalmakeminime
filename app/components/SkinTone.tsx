@@ -143,7 +143,7 @@ const SkinTone = ({ step, setStep, skinTone, setSkinTone }: skinToneType) => {
     setStep(7);
   };
   return (
-    <div className="max-sm:w-full w-[50%] max-w-md mx-auto flex space-y-3 flex-col items-center justify-between p-6 s">
+    <div className="max-sm:w-full w-[50%] max-w-md mx-auto flex space-y-3 flex-col items-center justify-between max-sm:justify-center p-6 s">
       {/* Section Title and Navigation Buttons */}
       <h1 className="text-blue-500 text-xl text-center font-bold">choose colour
       </h1>
@@ -164,7 +164,7 @@ const SkinTone = ({ step, setStep, skinTone, setSkinTone }: skinToneType) => {
       </div>
 
       {/* Skin Tone Selection Grid */}
-      <div className="grid grid-cols-4 max-sm:scale-75 gap-4 w-full justify-center items-center border p-4">
+      <div className="grid grid-cols-4  max-sm:justify-center max-sm:items-center gap-4 w-full justify-center items-center border p-4 overflow-auto">
         {skinTones.map((tone) => (
           <button
             key={tone.id}
@@ -193,7 +193,7 @@ const SkinTone = ({ step, setStep, skinTone, setSkinTone }: skinToneType) => {
         </button>
         <button
           onClick={handleConfirm}
-          className="px-20 py-2 bg-blue-500   text-white text-sm rounded hover:bg-blue-800 border flex justify-center items-center gap-2 max-sm:gap-1 "
+          className="px-20 max-sm:px-8  py-2 bg-blue-500   text-white text-sm rounded hover:bg-blue-800 border flex justify-center items-center gap-2 max-sm:gap-1 "
         >
           <FaCheck className="inline-block mr-2" />
           Confirm

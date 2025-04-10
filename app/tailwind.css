@@ -98,6 +98,6 @@ body {
 
 @media screen and (max-width: 768px) {
   .position{
-    transform: translateX(140px);
+    transform: translateX(160px);
   }
 }

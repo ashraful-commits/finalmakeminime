@@ -20,8 +20,8 @@ const FinalPreview: React.FC<FinalPreviewProps> = ({
 
   return (
     <div
-      className={`lg:w-[50%] md:w-[50%]  max-sm:w-full max-sm:flex justify-between lg:flex lg:flex-col md:flex md:flex-col lg:items-start md:items-start max-sm:items-center  space-y-4 min-h-full px-5 max-sm:mb-20 max-sm:gap-5 ${
-        step !== 7 ? " max-sm:min-h-[100vh]" : ""
+      className={`lg:w-[50%] md:w-[50%]  max-sm:w-full max-sm:flex justify-between max-sm:justify-center lg:flex lg:flex-col md:flex md:flex-col lg:items-start md:items-start max-sm:items-center  space-y-4 min-h-full px-5 max-sm:mb-20 max-sm:gap-5 ${
+        step !== 7 ? " max-sm:min-h-[95vh]" : ""
       }`}
     >
       {croppedImage && (

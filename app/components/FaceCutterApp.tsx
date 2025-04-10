@@ -130,7 +130,7 @@ const FaceCutterApp = ({ faceImage, setStep, setCropedImage, step }) => {
 
   return (
     <div
-      className={`w-[50%] max-sm:w-full flex space-y-10  flex-col items-center justify-between border-gray-300 lg:border-r md:border-r max-sm:border-none min-h-[80vh] p-4 bg-white max-sm:space-y-6   rounded-lg relative ${
+      className={`w-[50%] max-sm:w-full flex space-y-10  flex-col items-center justify-between max-sm:justify-center border-gray-300 lg:border-r md:border-r max-sm:border-none min-h-[80vh] p-4 bg-white max-sm:space-y-6   rounded-lg relative ${
         step !== 7 ? " max-sm:min-h-[90vh]" : ""
       }`}
     >
@@ -173,7 +173,7 @@ const FaceCutterApp = ({ faceImage, setStep, setCropedImage, step }) => {
           <button
             // onClick={handleRemoveBg}
             onClick={handleFaceCut}
-            className="px-20 py-2 bg-blue-500   text-white text-sm rounded hover:bg-blue-800 border flex justify-center items-center gap-2 max-sm:gap-1 "
+            className="px-20 max-sm:px-8  py-2 bg-blue-500   text-white text-sm rounded hover:bg-blue-800 border flex justify-center items-center gap-2 max-sm:gap-1 "
           >
             {removeLoader ? (
               <AiOutlineLoading3Quarters className="animate-spin" />

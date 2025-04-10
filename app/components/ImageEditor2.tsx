@@ -319,7 +319,7 @@ const ImageEditor = ({
 
   return (
     <div
-      className={` flex-col border-r border-r-gray-500 max-sm:border-r-0 items-center justify-between w-[50%] max-sm:w-full max-sm:border-b z-0 lg:min-h-[80vh] max-sm:min-h-[400px]  md:min-h-[80vh] ${
+      className={` flex-col border-r border-r-gray-500 max-sm:border-r-0 items-center justify-center w-[50%] max-sm:w-full max-sm:border-b z-0 lg:min-h-[80vh] max-sm:min-h-[450px]  md:min-h-[80vh] ${
         step === 0 || step === 4 || step === 7 || step === 8
           ? "flex"
           : "max-sm:hidden"
@@ -328,7 +328,7 @@ const ImageEditor = ({
       <div className="relative w-full flex justify-center items-center  bg-center bg-no-repeat lg:min-h-[90vh] max-sm:min-h-[50vh] md:min-h-[80vh] max-sm:h-[35vh]">
         <div
           ref={containerRef}
-          className="relative w-[557px] h-[800px] flex justify-center items-center top-0 max-sm:scale-[.60] "
+          className="relative w-[557px] h-[800px] flex justify-center items-center top-0 max-sm:scale-[.55] "
         >
           {/* Background Layers */}
           <canvas

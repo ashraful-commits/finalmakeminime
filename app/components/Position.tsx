@@ -73,7 +73,7 @@ const zoomOut = () => {
     setStep(3);
   };
   return (
-    <div className="controls mt-1  w-[50%] max-w-4xl max-sm:max-w-full space-y-10 flex flex-col justify-between items-center">
+    <div className="controls mt-1  w-[50%] max-w-4xl max-sm:max-w-full max-sm:justify-center space-y-10 flex flex-col justify-between items-center">
       <h1 className="text-bule-500 text-lg font-bold my-5 text-center text-blue-500">Position Face</h1>
       <h2 className="text-center max-sm:my-5 my-10 text-lg max-sm:text-sm font-bold w-full">Useing the tools below position the face on the items correctly</h2>
       <div className="flex gap-10  justify-center items-center max-sm:gap-4 max-sm:flex max-sm:justify-center">
@@ -151,7 +151,7 @@ const zoomOut = () => {
            <span className="inline-block">Back</span>
         </button>
         <button
-          className="px-20 py-2 bg-blue-500   text-white text-sm rounded hover:bg-blue-800 border flex justify-center items-center gap-2 max-sm:gap-1 "
+          className="px-20 max-sm:px-8  py-2 bg-blue-500   text-white text-sm rounded hover:bg-blue-800 border flex justify-center items-center gap-2 max-sm:gap-1 "
           onClick={handleConfirm}
         >
           <FaCheck /> <span className="inline-block">Confirm</span>
